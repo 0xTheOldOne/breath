@@ -1,0 +1,33 @@
+{
+  "name": "breath",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\"",
+    "commit": "git add . && git commit -m \"deploy\"",
+    "push": "git push origin",
+    "deploy": "npm run build && npm run commit && npm run push && git subtree push --prefix dist origin gh-pages"
+  },
+  "dependencies": {
+    "chart.js": "^3.9.1",
+    "vue": "^3.2.13",
+    "vue-chartjs": "^4.1.2",
+    "vue-router": "^4.0.3",
+    "vuex": "^4.0.0"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-router": "~5.0.0",
+    "@vue/cli-plugin-vuex": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "less": "^4.0.0",
+    "less-loader": "^8.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ]
+}
