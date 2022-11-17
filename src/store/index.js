@@ -7,16 +7,127 @@ const vuexLocal = new VuexPersistence({
   storage: window.localStorage,
   reducer: (state) => ({
     userLocale: state.userLocale,
-    shotsPerRound: state.shotsPerRound,
-    opponent: state.opponent,
-    match: state.match,
-    round: state.round,
+    breathTechnique: state.breathTechnique,
   }),
 });
 
 export default createStore({
   state: {
     userLocale: "",
+    breathTechnique: "",
+    breathTechniques: [
+      {
+        code: "relax",
+        sequence: [
+          {
+            type: "inhale",
+            length: 4,
+          },
+          {
+            type: "exhale",
+            length: 6,
+          },
+        ],
+      },
+      {
+        code: "balance",
+        sequence: [
+          {
+            type: "inhale",
+            detail: "",
+            length: 4,
+          },
+          {
+            type: "hold",
+            detail: "",
+            length: 2,
+          },
+          {
+            type: "exhale",
+            detail: "",
+            length: 4,
+          },
+        ],
+      },
+      {
+        code: "energy",
+        sequence: [
+          {
+            type: "inhale",
+            detail: "stomach",
+            length: 2.5,
+          },
+          {
+            type: "inhale",
+            detail: "chest",
+            length: 2.5,
+          },
+          {
+            type: "exhale",
+            detail: "",
+            length: 5,
+          },
+        ],
+      },
+      {
+        code: "focus",
+        sequence: [
+          {
+            type: "inhale",
+            detail: "",
+            length: 4,
+          },
+          {
+            type: "hold",
+            detail: "",
+            length: 4,
+          },
+          {
+            type: "exhale",
+            detail: "",
+            length: 4,
+          },
+          {
+            type: "hold",
+            detail: "",
+            length: 4,
+          },
+        ],
+      },
+      {
+        code: "dynamism",
+        sequence: [
+          {
+            type: "inhale",
+            length: 4,
+          },
+          {
+            type: "exhale",
+            length: 2,
+          },
+        ],
+      },
+      {
+        code: "chill",
+        sequence: [
+          {
+            type: "inhale",
+            detail: "",
+            length: 4,
+          },
+          {
+            type: "hold",
+            detail: "",
+            length: 7,
+          },
+          {
+            type: "exhale",
+            detail: "",
+            length: 8,
+          },
+        ],
+      },
+    ],
   },
   getters: {},
   mutations: {

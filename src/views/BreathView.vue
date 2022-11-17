@@ -18,6 +18,7 @@
 </template>
 
 <script>
+  import { mapState, mapGetters } from "vuex";
   import { Doughnut } from "vue-chartjs";
   import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale, Plugin, DoughnutController } from "chart.js";
 
@@ -57,6 +58,9 @@
       };
     },
     computed: {
+      ...mapState({
+        userLocale: (state) => state.userLocale,
+      }),
       remaining() {
         return this.inhaleMax - this.inhale + this.exhaleMax - this.exhale;
       },
