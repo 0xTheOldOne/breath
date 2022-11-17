@@ -1,5 +1,5 @@
 <template>
-  <div class="title">Breath</div>
+  <div class="title">{{ $t("title") }}</div>
   <div class="web">
     <div class="alert alert-info">This app is meant to be used on a smartphone or a tablet...</div>
   </div>
@@ -8,6 +8,7 @@
       <router-view />
     </div>
   </div>
+  <!-- {{ $i18n.locale }} -->
 </template>
 
 <style lang="less">
@@ -48,10 +49,10 @@
 
         .title {
           position: fixed;
-          top: 10vw;
+          top: 5vw;
           width: 100%;
           text-align: center;
-          font-size: 10vw;
+          font-size: 15vw;
         }
 
         .web {

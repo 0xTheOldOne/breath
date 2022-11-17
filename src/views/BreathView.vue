@@ -1,18 +1,17 @@
 <template>
   <div class="breath-container" v-if="timeoutInProgress">
     <Doughnut class="breath" ref="chart" :chart-data="chartData" :chart-options="chartOptions" />
-    <div class="ticker" :style="'transform: rotate(' + progressDegrees + 'deg);'"></div>
-    <div class="action">
-      <span class="inhale" :style="'font-size:' + progressInhale + '%'" v-if="currentAction == 'inhale'">
-        {{ currentAction }}
-      </span>
-      <span class="exhale" :style="'font-size:' + progressExhale + '%'" v-else>
-        {{ currentAction }}
+    <div class="ticker" :style="'transform: rotate(' + degrees + 'deg);'"></div>
+    <div class="action" :style="'transform: scale(' + scale + ');'">
+      <span>
+        {{ $t("messages." + currentAction) }}
       </span>
     </div>
   </div>
   <div class="breath-controller">
     <span class="material-symbols-outlined" v-if="!timeoutInProgress" v-on:click="startTimer"> play_circle </span>
+  </div>
+  <div class="breath-controller bottom">
     <span class="material-symbols-outlined" v-if="timeoutInProgress" v-on:click="stopTimer"> stop_circle </span>
     <span class="material-symbols-outlined" v-if="timeoutInProgress" v-on:click="resetValues"> device_reset </span>
   </div>
@@ -78,15 +77,18 @@
           ],
         };
       },
-      progressInhale() {
-        var percent = (this.inhale * 100) / this.inhaleMax;
-        return Math.floor(100 + percent);
+      scale() {
+        if (this.currentAction == "inhale") {
+          var percent = this.inhale / this.inhaleMax;
+          return 1 + percent;
+        } else if (this.currentAction == "exhale") {
+          var percent = this.exhale / this.exhaleMax;
+          return 2 - percent;
+        } else if (this.currentAction == "hold") {
+          return 2;
+        }
       },
-      progressExhale() {
-        var percent = (this.exhale * 100) / this.exhaleMax;
-        return Math.floor(200 - percent);
-      },
-      progressDegrees() {
+      degrees() {
         var current = this.inhale + this.exhale;
         var total = this.inhaleMax + this.exhaleMax;
         return Math.floor((current * 360) / total);
@@ -141,7 +143,6 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    margin-bottom: 15vw;
 
     .ticker,
     .breath {
@@ -168,23 +169,20 @@
 
     .action {
       > span {
-        transition: all ease-in-out 0.125s;
+        padding: 5vw;
       }
     }
   }
 
   .breath-controller {
     text-align: center;
-  }
 
-  .fade-enter-active,
-  .fade-leave-active {
-    transition: opacity 0.5s;
-  }
-
-  .fade-enter,
-  .fade-leave-to {
-    opacity: 0;
+    &.bottom {
+      position: fixed;
+      bottom: 5vw;
+      left: 0;
+      right: 0;
+    }
   }
 
   .material-symbols-outlined {

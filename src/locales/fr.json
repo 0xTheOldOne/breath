@@ -1,0 +1,8 @@
+{
+  "title": "Respire",
+  "messages": {
+    "inhale": "Inspire",
+    "exhale": "Expire",
+    "hold": "Retiens ton souffle"
+  }
+}
