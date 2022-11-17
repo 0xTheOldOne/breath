@@ -80,16 +80,16 @@
       },
       progressInhale() {
         var percent = (this.inhale * 100) / this.inhaleMax;
-        return 100 + percent;
+        return Math.floor(100 + percent);
       },
       progressExhale() {
         var percent = (this.exhale * 100) / this.exhaleMax;
-        return 200 - percent;
+        return Math.floor(200 - percent);
       },
       progressDegrees() {
         var current = this.inhale + this.exhale;
         var total = this.inhaleMax + this.exhaleMax;
-        return (current * 360) / total;
+        return Math.floor((current * 360) / total);
       },
     },
     methods: {
@@ -141,7 +141,7 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    margin-bottom: 3rem;
+    margin-bottom: 15vw;
 
     .ticker,
     .breath {
@@ -165,6 +165,12 @@
         background-color: white;
       }
     }
+
+    .action {
+      > span {
+        transition: all ease-in-out 0.125s;
+      }
+    }
   }
 
   .breath-controller {
@@ -182,7 +188,9 @@
   }
 
   .material-symbols-outlined {
-    font-size: 300%;
+    font-size: 15vw;
     margin: 0 2rem;
+    color: white;
+    text-shadow: 0px 0px 0.25rem fade(black, 50%);
   }
 </style>

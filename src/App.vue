@@ -22,6 +22,7 @@
 
   html {
     body {
+      font-size: 5vw;
       background: url("./assets/background.jpg") center bottom no-repeat;
       background-size: cover;
 
@@ -50,7 +51,7 @@
           top: 10vw;
           width: 100%;
           text-align: center;
-          font-size: 3rem;
+          font-size: 10vw;
         }
 
         .web {
