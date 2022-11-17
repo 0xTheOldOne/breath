@@ -11,6 +11,50 @@
   <!-- {{ $i18n.locale }} -->
 </template>
 
+<script>
+  import { mapState, mapGetters } from "vuex";
+  import { getSupportedLocales } from "./locales/helper";
+  import { getBrowserLocale } from "./locales/helper";
+
+  export default {
+    name: "App",
+    beforeCreate() {
+      this.$store.commit("initializeFromLocalStorage");
+    },
+    data() {
+      return {
+        locales: getSupportedLocales(),
+        browserLocale: getBrowserLocale({ countryCodeOnly: true }),
+      };
+    },
+    methods: {
+      setLocale(locale) {
+        console.debug("🌐 Previous $i18n.locale : " + this.$i18n.locale);
+        this.$store.commit({
+          type: "setUserLocale",
+          locale: locale,
+        });
+        this.$i18n.locale = locale;
+      },
+    },
+    mounted() {
+      console.debug("🌐 userLocale = " + this.$store.state.userLocale + " / i18n.locale = " + this.$i18n.locale);
+      if (this.userLocale !== "" && this.userLocale != undefined && this.userLocale != null) {
+        console.debug("🌐 using userLocale");
+        this.setLocale(this.userLocale);
+      } else {
+        console.debug("🌐 using browserLocale");
+        this.setLocale(this.browserLocale);
+      }
+    },
+    computed: {
+      ...mapState({
+        userLocale: (state) => state.userLocale,
+      }),
+    },
+  };
+</script>
+
 <style lang="less">
   html,
   body {
