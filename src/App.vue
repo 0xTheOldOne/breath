@@ -50,6 +50,8 @@
     computed: {
       ...mapState({
         userLocale: (state) => state.userLocale,
+        breathTechnique: (state) => state.breathTechnique,
+        breathTechniques: (state) => state.breathTechniques,
       }),
     },
   };

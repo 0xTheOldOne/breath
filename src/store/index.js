@@ -14,7 +14,7 @@ const vuexLocal = new VuexPersistence({
 export default createStore({
   state: {
     userLocale: "",
-    breathTechnique: "",
+    breathTechnique: {},
     breathTechniques: [
       {
         code: "relax",
@@ -147,6 +147,10 @@ export default createStore({
       if (localStorage.getItem(vuexPersistKey) != null && localStorage.getItem(vuexPersistKey) != undefined) {
         state = JSON.parse(localStorage.getItem(vuexPersistKey));
       } else {
+        this.commit({
+          type: "setTechnique",
+          technique: state.breathTechniques[0],
+        });
         localStorage.setItem(vuexPersistKey, JSON.stringify(state));
       }
 
@@ -155,6 +159,10 @@ export default createStore({
     setUserLocale(state, payload) {
       console.debug(payload);
       state.userLocale = payload.locale;
+    },
+    setTechnique(state, payload) {
+      console.debug(payload);
+      state.breathTechnique = payload.technique;
     },
   },
   actions: {},

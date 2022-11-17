@@ -1,135 +1,22 @@
 <template>
-  <div class="breath-container" v-if="timeoutInProgress">
-    <Doughnut class="breath" ref="chart" :chart-data="chartData" :chart-options="chartOptions" />
-    <div class="ticker" :style="'transform: rotate(' + degrees + 'deg);'"></div>
-    <div class="action" :style="'transform: scale(' + scale + ');'">
-      <span>
-        {{ $t("messages." + currentAction) }}
-      </span>
-    </div>
-  </div>
-  <div class="breath-controller">
-    <span class="material-symbols-outlined" v-if="!timeoutInProgress" v-on:click="startTimer"> play_circle </span>
-  </div>
-  <div class="breath-controller bottom">
-    <span class="material-symbols-outlined" v-if="timeoutInProgress" v-on:click="stopTimer"> stop_circle </span>
-    <span class="material-symbols-outlined" v-if="timeoutInProgress" v-on:click="resetValues"> device_reset </span>
-  </div>
+  <Breather :technique="breathTechnique" />
 </template>
 
 <script>
   import { mapState, mapGetters } from "vuex";
-  import { Doughnut } from "vue-chartjs";
-  import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale, Plugin, DoughnutController } from "chart.js";
-
-  ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale);
+  import Breather from "@/components/Breather.vue";
 
   export default {
     name: "BreathView",
     components: {
-      Doughnut,
-    },
-    data() {
-      return {
-        timeout: null,
-        timeoutInProgress: false,
-        inhale: 0,
-        inhaleMax: 400,
-        exhale: 0,
-        exhaleMax: 600,
-        currentAction: "",
-        chartOptions: {
-          borderWidth: 0,
-          circumference: 360,
-          rotation: 0,
-          // cutout: "90%",
-          responsive: true,
-          maintainAspectRatio: true,
-          animation: false,
-          plugins: {
-            legend: {
-              display: false,
-            },
-            tooltip: {
-              enabled: false,
-            },
-          },
-        },
-      };
+      Breather,
     },
     computed: {
       ...mapState({
         userLocale: (state) => state.userLocale,
+        breathTechnique: (state) => state.breathTechnique,
+        breathTechniques: (state) => state.breathTechniques,
       }),
-      remaining() {
-        return this.inhaleMax - this.inhale + this.exhaleMax - this.exhale;
-      },
-      chartData() {
-        return {
-          datasets: [
-            {
-              data: [this.inhaleMax + this.exhaleMax],
-              backgroundColor: ["#ffffffA0"],
-              cutout: "99%",
-            },
-            // {
-            //   data: [this.inhaleMax, this.exhaleMax],
-            //   // data: [this.inhale, this.exhale, this.remaining],
-            //   backgroundColor: ["lightskyblue", "lightcoral", "transparent"],
-            //   cutout: "85%",
-            // },
-          ],
-        };
-      },
-      scale() {
-        if (this.currentAction == "inhale") {
-          var percent = this.inhale / this.inhaleMax;
-          return 1 + percent;
-        } else if (this.currentAction == "exhale") {
-          var percent = this.exhale / this.exhaleMax;
-          return 2 - percent;
-        } else if (this.currentAction == "hold") {
-          return 2;
-        }
-      },
-      degrees() {
-        var current = this.inhale + this.exhale;
-        var total = this.inhaleMax + this.exhaleMax;
-        return Math.floor((current * 360) / total);
-      },
-    },
-    methods: {
-      startTimer() {
-        this.timeout = setTimeout(this.updateValues, 10);
-        this.timeoutInProgress = true;
-      },
-      stopTimer() {
-        clearTimeout(this.timeout);
-        this.timeoutInProgress = false;
-      },
-      resetValues() {
-        this.exhale = 0;
-        this.inhale = 0;
-      },
-      updateValues() {
-        if (this.remaining == 0) {
-          this.resetValues();
-        }
-
-        if (this.inhale < this.inhaleMax) {
-          if (this.inhale == 0) {
-            this.currentAction = "inhale";
-          }
-          this.inhale += 1;
-        } else if (this.exhale < this.exhaleMax) {
-          if (this.exhale == 0) {
-            this.currentAction = "exhale";
-          }
-          this.exhale += 1;
-        }
-
-        this.startTimer();
-      },
     },
   };
 </script>
