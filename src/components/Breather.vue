@@ -11,6 +11,9 @@
   <div class="breath-controller">
     <span class="material-symbols-outlined" v-if="!timeoutInProgress" v-on:click="startTimer"> play_circle </span>
   </div>
+  <div class="technique-infos">
+    {{ $t("sequences." + technique.code + ".title") }}
+  </div>
   <div class="breath-controller bottom">
     <span class="material-symbols-outlined" v-if="timeoutInProgress" v-on:click="stopTimer"> stop_circle </span>
     <span class="material-symbols-outlined" v-if="timeoutInProgress" v-on:click="resetValues"> device_reset </span>
@@ -50,7 +53,6 @@
           borderWidth: 0,
           circumference: 360,
           rotation: 0,
-          // cutout: "90%",
           responsive: true,
           maintainAspectRatio: true,
           animation: false,
@@ -143,7 +145,6 @@
 <style lang="less" scoped>
   @size: 70vw;
   @max-size: 400px;
-
   .breath-container {
     width: @size;
     height: @size;
@@ -193,6 +194,13 @@
       left: 0;
       right: 0;
     }
+  }
+
+  .technique-infos {
+    text-align: center;
+    padding: 1rem 0px;
+    color: black;
+    text-shadow: 0px 0px 0.25rem fade(white, 50%);
   }
 
   .material-symbols-outlined {

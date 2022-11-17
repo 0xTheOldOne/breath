@@ -4,5 +4,31 @@
     "inhale": "Inspirez",
     "exhale": "Expirez",
     "hold": "Retenez"
+  },
+  "sequences": {
+    "relax": {
+      "title": "Relax",
+      "description": ""
+    },
+    "balance": {
+      "title": "Balance",
+      "description": ""
+    },
+    "energy": {
+      "title": "Energetic",
+      "description": ""
+    },
+    "focus": {
+      "title": "Focus",
+      "description": ""
+    },
+    "dynamism": {
+      "title": "Dynamic",
+      "description": ""
+    },
+    "chill": {
+      "title": "Chill",
+      "description": ""
+    }
   }
 }

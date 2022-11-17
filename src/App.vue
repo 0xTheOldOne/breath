@@ -1,7 +1,13 @@
 <template>
   <div class="title">{{ $t("title") }}</div>
   <div class="web">
-    <div class="alert alert-info">This app is meant to be used on a smartphone or a tablet...</div>
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="alert alert-info" style="font-size: 14px">This app is meant to be used on a smartphone or a tablet...</div>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="mobile">
     <div class="router-view">
@@ -74,7 +80,7 @@
       background-size: cover;
 
       * {
-        font-family: "Lobster Two", cursive;
+        font-family: "Montserrat", sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         color: white;
@@ -95,10 +101,11 @@
 
         .title {
           position: fixed;
-          top: 5vw;
+          top: 5vh;
           width: 100%;
           text-align: center;
           font-size: 15vw;
+          font-family: "Lobster Two", cursive;
         }
 
         .web {
