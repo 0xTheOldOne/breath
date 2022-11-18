@@ -1,19 +1,9 @@
 <template>
   <div class="appname">{{ $t("title") }}</div>
-  <div class="web">
-    <div class="container">
-      <div class="row">
-        <div class="col-xs-12">
-          <div class="alert alert-info" style="font-size: 14px">This app is meant to be used on a smartphone or a tablet...</div>
-        </div>
-      </div>
-    </div>
+  <div class="router-view">
+    <router-view />
   </div>
-  <div class="mobile">
-    <div class="router-view">
-      <router-view />
-    </div>
-  </div>
+  <div class="disclaimer">I was greatly inspired by the famous relaxation application called <a href="https://www.calm.com/fr" target="_blank" rel="noopener noreferrer">Calm</a> when i wrote this app.</div>
 </template>
 
 <script>
@@ -74,7 +64,7 @@
 
   html {
     body {
-      font-size: 5vw;
+      font-size: 16px;
       background: url("./assets/background.jpg") center bottom no-repeat;
       background-size: cover;
 
@@ -96,40 +86,48 @@
         height: 100vh;
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: space-between;
+        flex-direction: column;
 
         .appname {
-          position: fixed;
-          top: 5vh;
-          width: 100%;
           text-align: center;
-          font-size: 15vw;
+          font-size: 5rem;
           font-family: "Lobster Two", cursive;
         }
 
-        .web {
-          display: none;
+        .router-view {
+          width: 100%;
+          padding: 10px;
         }
 
-        .mobile {
-          display: block;
-          width: 100%;
+        .disclaimer {
+          font-size: 1rem;
+          text-align: center;
+          padding: 10px;
+
+          a {
+            color: inherit;
+            text-decoration: none;
+            font-size: inherit;
+          }
         }
       }
     }
   }
 
-  @media (min-width: 913px) {
+  @media (max-width: 913px) {
     html {
       body {
+        background: url("./assets/background_mobile.jpg") center bottom no-repeat;
+        background-size: cover;
+
         #app {
-          .web {
-            display: block;
-            width: 100%;
+          .router-view {
+            padding: 0px !important;
           }
 
-          .mobile {
-            display: none;
+          .disclaimer {
+            font-size: 0.7rem !important;
           }
         }
       }

@@ -1,33 +1,37 @@
 <template>
-  <div class="breath-container" v-if="timeoutInProgress">
-    <Doughnut class="breath" ref="chart" :chart-data="chartData" :chart-options="chartOptions" />
-    <div class="ticker" :style="'transform: rotate(' + degrees + 'deg);'"></div>
-    <div class="action" :style="'transform: scale(' + scale + ');'">
-      <span v-if="currentAction != ''">
-        {{ $t("messages." + currentAction) }}
-      </span>
-      <span v-if="currentActionDetail != ''">
-        {{ $t("messages." + currentActionDetail) }}
-      </span>
+  <div class="breath-container" :class="timeoutInProgress ? 'running' : 'idle'">
+    <div class="breath" v-if="timeoutInProgress">
+      <div class="doughnut-container">
+        <div class="ticker" :style="'transform: rotate(' + degrees + 'deg);'"></div>
+        <Doughnut class="doughnut" ref="chart" :chart-data="chartData" :chart-options="chartOptions" />
+      </div>
+      <div class="action" :style="'transform: scale(' + scale + ');'">
+        <span v-if="currentAction != ''">
+          {{ $t("messages." + currentAction) }}
+        </span>
+        <span v-if="currentActionDetail != ''">
+          {{ $t("messages." + currentActionDetail) }}
+        </span>
+      </div>
     </div>
-  </div>
-  <div class="breath-controller">
-    <span class="material-symbols-outlined" v-if="!timeoutInProgress" v-on:click="startTimer"> play_circle </span>
-  </div>
-  <div class="technique-infos" v-if="!timeoutInProgress">
-    <div class="title">
-      {{ $t("sequences." + technique.code + ".title") }}
+    <div class="breath-controller" v-if="!timeoutInProgress">
+      <span class="material-symbols-outlined" v-on:click="startTimer"> play_circle </span>
     </div>
-    <div class="description">
-      {{ $t("sequences." + technique.code + ".description") }}
+    <div class="technique-infos" v-if="!timeoutInProgress">
+      <div class="title">
+        {{ $t("sequences." + technique.code + ".title") }}
+      </div>
+      <div class="description">
+        {{ $t("sequences." + technique.code + ".description") }}
+      </div>
+      <div v-if="technique.advanced">
+        <span class="badge rounded-pill bg-light text-dark">{{ $t("messages.advanced") }}</span>
+      </div>
     </div>
-    <div v-if="technique.advanced">
-      <span class="badge rounded-pill bg-light text-dark">{{ $t("messages.advanced") }}</span>
+    <div class="breath-controller bottom" v-if="timeoutInProgress">
+      <span class="material-symbols-outlined" v-on:click="stopTimer"> stop_circle </span>
+      <span class="material-symbols-outlined" v-on:click="resetValues"> device_reset </span>
     </div>
-  </div>
-  <div class="breath-controller bottom">
-    <span class="material-symbols-outlined" v-if="timeoutInProgress" v-on:click="stopTimer"> stop_circle </span>
-    <span class="material-symbols-outlined" v-if="timeoutInProgress" v-on:click="resetValues"> device_reset </span>
   </div>
 </template>
 
@@ -83,13 +87,12 @@
       },
       remaining() {
         var max = this.arraySum(this.technique.sequence.map((step) => step.duration));
-        var val = this.arraySum(this.technique.sequence.map((step) => step.current));
+        var val = this.arraySum(this.technique.sequence.map((step) => step.duration));
         return max - val;
-        // return this.inhaleMax - this.inhale + this.exhaleMax - this.exhale;
       },
       chartData() {
         var max = this.arraySum(this.technique.sequence.map((step) => step.duration));
-        var data = this.technique.sequence.map((step) => step.current);
+        var data = this.technique.sequence.map((step) => step.duration);
         var colors = this.technique.sequence.map((step) => step.color);
 
         data.push(this.remaining);
@@ -97,18 +100,20 @@
 
         return {
           datasets: [
-            {
-              data: [max],
-              backgroundColor: ["#ffffffA0"],
-              cutout: "99%",
-            },
+            // {
+            //   data: [max],
+            //   backgroundColor: ["#ffffffA0"],
+            //   cutout: "99%",
+            // },
             {
               // data: [this.inhaleMax, this.exhaleMax],
               // data: [this.inhale, this.exhale, this.remaining],
               data: data,
               backgroundColor: colors,
-              cutout: "90%",
+              cutout: "95%",
               borderRadius: 30,
+              borderWidth: 10,
+              borderColor: "transparent",
             },
           ],
         };
@@ -215,95 +220,167 @@
 </script>
 
 <style lang="less" scoped>
-  @size: 70vw;
-  @max-size: 400px;
   .breath-container {
-    width: @size;
-    height: @size;
-    max-width: @max-size;
-    max-height: @max-size;
-    margin: 0 auto;
-    margin-top: -16vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-
-    .ticker,
     .breath {
-      position: absolute;
-      width: inherit;
-      height: inherit;
-      max-width: inherit;
-      max-height: inherit;
-    }
+      margin: 0 auto;
+      position: relative;
 
-    .ticker {
-      &:before {
-        @size: 5vw;
-        content: "";
+      @size: 40vh;
+      width: @size !important;
+      height: @size !important;
+
+      .doughnut-container {
+        width: @size !important;
+        height: @size !important;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+
+        * {
+          width: @size !important;
+          height: @size !important;
+        }
+
+        .ticker {
+          position: absolute;
+
+          &:before {
+            @size: 2rem;
+            content: "";
+            position: absolute;
+            width: @size;
+            height: @size;
+            left: calc(50% - @size / 2);
+            top: calc(-@size / 2);
+            background-color: white;
+            transform: rotate(45deg);
+          }
+        }
+      }
+
+      .action {
         position: absolute;
-        width: @size;
-        height: @size;
-        margin-top: calc(-@size / 2);
-        margin-left: calc(50% - @size / 2);
-        border-radius: 100%;
-        background-color: white;
+        width: 100%;
+        height: 10vh;
+        top: calc(50% - 5vh);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+
+        > span {
+          font-size: 1rem;
+          line-height: 1rem;
+          display: block;
+        }
       }
     }
 
-    .action {
+    .breath-controller {
       text-align: center;
-      > span {
-        padding: 0;
-        display: block;
+    }
+
+    .technique-infos {
+      width: 100%;
+      margin: 0 auto;
+      text-align: center;
+      padding: 1rem 0px;
+
+      * {
+        color: black;
+        text-shadow: 0px 0px 0.25rem fade(white, 50%);
+      }
+
+      .title {
+        font-size: 1.5rem;
+      }
+
+      .description {
+        font-size: 1rem;
+      }
+
+      .badge {
+        margin-top: 0.5rem;
+        font-size: 0.8rem;
       }
     }
-  }
 
-  .breath-controller {
-    text-align: center;
+    .material-symbols-outlined {
+      cursor: pointer;
+      font-size: 10rem;
+      margin: 0 2rem;
+      color: white;
+      text-shadow: 0px 0px 0.25rem fade(black, 50%);
+    }
 
-    &.bottom {
-      position: fixed;
-      bottom: 5vw;
-      left: 0;
-      right: 0;
+    &.running {
+      .breath-controller {
+        &.bottom {
+          margin-top: 1rem;
+        }
+      }
+    }
+
+    &.idle {
+      padding-top: 6rem;
     }
   }
 
-  .technique-infos {
-    width: @size;
-    height: @size;
-    max-width: @max-size;
-    max-height: @max-size;
-    margin: 0 auto;
-    text-align: center;
-    padding: 1rem 0px;
+  @media (max-width: 912px) {
+    .ticker {
+      position: absolute;
 
-    * {
-      color: black;
-      text-shadow: 0px 0px 0.25rem fade(white, 50%);
+      &:before {
+        @size: 1rem;
+        width: @size !important;
+        height: @size !important;
+        left: calc(50% - @size / 2) !important;
+        top: calc(-@size / 2) !important;
+      }
     }
 
-    .title {
-      font-size: 100%;
-    }
-
-    .description {
-      font-size: 70%;
-    }
-
-    .badge {
-      margin-top: 0.5rem;
-      font-size: 60%;
+    .material-symbols-outlined {
+      font-size: 4rem !important;
     }
   }
 
-  .material-symbols-outlined {
-    font-size: 15vw;
-    margin: 0 2rem;
-    color: white;
-    text-shadow: 0px 0px 0.25rem fade(black, 50%);
+  @media (min-width: 913px) {
+    .breath-container {
+      .breath {
+        .action {
+          > span {
+            font-size: 2rem !important;
+            line-height: 2rem !important;
+          }
+        }
+      }
+
+      .technique-infos {
+        .title {
+          font-size: 3rem !important;
+        }
+        .description {
+          font-size: 2rem !important;
+        }
+
+        .badge {
+          font-size: 1rem !important;
+        }
+      }
+
+      &.running {
+        .breath-controller {
+          &.bottom {
+            margin-top: 3rem !important;
+          }
+        }
+      }
+
+      &.idle {
+        padding-top: 9rem !important;
+      }
+    }
   }
 </style>

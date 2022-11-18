@@ -39,22 +39,14 @@
 
 <style lang="less" scoped>
   #breathCarousel {
-    .carousel-inner {
-      .carousel-item {
-        height: 70vh;
-        margin-top: 15vh;
-        padding-top: 23.5vh;
+    button[class*="carousel-control-"] {
+      width: 10%;
+    }
+  }
 
-        > div {
-          display: none;
-        }
-
-        &.active {
-          > div {
-            display: block;
-          }
-        }
-      }
+  @media (max-width: 913px) {
+    button[class*="carousel-control-"] {
+      width: 10% !important;
     }
   }
 </style>
