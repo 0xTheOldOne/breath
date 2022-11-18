@@ -87,31 +87,34 @@
       },
       remaining() {
         var max = this.arraySum(this.technique.sequence.map((step) => step.duration));
-        var val = this.arraySum(this.technique.sequence.map((step) => step.duration));
+        var val = this.arraySum(this.technique.sequence.map((step) => step.current));
         return max - val;
       },
       chartData() {
         var max = this.arraySum(this.technique.sequence.map((step) => step.duration));
         var data = this.technique.sequence.map((step) => step.duration);
-        var colors = this.technique.sequence.map((step) => step.color);
+        var done = this.technique.sequence.map((step) => step.current);
+        var colors_data = this.technique.sequence.map((step) => step.color);
+        var colors_done = this.technique.sequence.map((step) => step.color.toString().substr(0, 7));
 
-        data.push(this.remaining);
-        colors.push("transparent");
+        done.push(this.remaining);
+        colors_done.push("transparent");
 
         return {
           datasets: [
-            // {
-            //   data: [max],
-            //   backgroundColor: ["#ffffffA0"],
-            //   cutout: "99%",
-            // },
             {
-              // data: [this.inhaleMax, this.exhaleMax],
-              // data: [this.inhale, this.exhale, this.remaining],
-              data: data,
-              backgroundColor: colors,
-              cutout: "95%",
+              data: done,
+              backgroundColor: colors_done,
+              cutout: "90%",
               borderRadius: 30,
+              borderWidth: 10,
+              borderColor: "transparent",
+            },
+            {
+              data: data,
+              backgroundColor: colors_data,
+              cutout: "95%",
+              borderRadius: 0,
               borderWidth: 10,
               borderColor: "transparent",
             },
