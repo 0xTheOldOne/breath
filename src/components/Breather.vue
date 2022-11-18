@@ -106,7 +106,7 @@
               data: done,
               backgroundColor: colors_done,
               cutout: "90%",
-              borderRadius: 30,
+              borderRadius: 0,
               borderWidth: 10,
               borderColor: "transparent",
             },
