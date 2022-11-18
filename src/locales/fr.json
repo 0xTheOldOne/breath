@@ -3,7 +3,9 @@
   "messages": {
     "inhale": "Inspirez",
     "exhale": "Expirez",
-    "hold": "Retenez"
+    "hold": "Retenez",
+    "stomach": "(ventre)",
+    "chest": "(poitrine)"
   },
   "sequences": {
     "relax": {

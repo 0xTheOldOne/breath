@@ -6,13 +6,17 @@
       <span v-if="currentAction != ''">
         {{ $t("messages." + currentAction) }}
       </span>
+      <span v-if="currentActionDetail != ''">
+        {{ $t("messages." + currentActionDetail) }}
+      </span>
     </div>
   </div>
   <div class="breath-controller">
     <span class="material-symbols-outlined" v-if="!timeoutInProgress" v-on:click="startTimer"> play_circle </span>
   </div>
   <div class="technique-infos">
-    {{ $t("sequences." + technique.code + ".title") }}
+    {{ $t("sequences." + technique.code + ".title") }}<br />
+    {{ $t("sequences." + technique.code + ".description") }}
   </div>
   <div class="breath-controller bottom">
     <span class="material-symbols-outlined" v-if="timeoutInProgress" v-on:click="stopTimer"> stop_circle </span>
@@ -44,11 +48,10 @@
       return {
         timeout: null,
         timeoutInProgress: false,
-        inhale: 0,
-        inhaleMax: 400,
-        exhale: 0,
-        exhaleMax: 600,
         currentAction: "",
+        currentActionDetail: "",
+        currentStepIndex: 0,
+        lastScaleValue: 1,
         chartOptions: {
           borderWidth: 0,
           circumference: 360,
@@ -68,21 +71,35 @@
       };
     },
     computed: {
+      step() {
+        return this.technique.sequence[this.currentStepIndex];
+      },
       remaining() {
-        return this.inhaleMax - this.inhale + this.exhaleMax - this.exhale;
+        var max = this.arraySum(this.technique.sequence.map((step) => step.duration));
+        var val = this.arraySum(this.technique.sequence.map((step) => step.current));
+        return max - val;
+        // return this.inhaleMax - this.inhale + this.exhaleMax - this.exhale;
       },
       chartData() {
+        var max = this.arraySum(this.technique.sequence.map((step) => step.duration));
+        var data = this.technique.sequence.map((step) => step.current);
+        var colors = this.technique.sequence.map((step) => step.color);
+
+        data.push(this.remaining);
+        colors.push("transparent");
+
         return {
           datasets: [
             {
-              data: [this.inhaleMax + this.exhaleMax],
+              data: [max],
               backgroundColor: ["#ffffffA0"],
               cutout: "99%",
             },
             {
               // data: [this.inhaleMax, this.exhaleMax],
-              data: [this.inhale, this.exhale, this.remaining],
-              backgroundColor: ["lightskyblue", "lightcoral", "transparent"],
+              // data: [this.inhale, this.exhale, this.remaining],
+              data: data,
+              backgroundColor: colors,
               cutout: "90%",
               borderRadius: 30,
             },
@@ -90,54 +107,102 @@
         };
       },
       scale() {
-        if (this.currentAction == "inhale") {
-          var percent = this.inhale / this.inhaleMax;
-          return 1 + percent;
-        } else if (this.currentAction == "exhale") {
-          var percent = this.exhale / this.exhaleMax;
-          return 2 - percent;
-        } else if (this.currentAction == "hold") {
-          return 2;
+        var val = 1;
+        var percent = this.step.current / this.step.duration;
+        var previousStepIndex = this.currentStepIndex - 1 > 0 ? this.currentStepIndex - 1 : this.technique.sequence.length - 1;
+        var previousStepType = this.technique.sequence[previousStepIndex].type;
+        var nextStepIndex = this.currentStepIndex + 1 < this.technique.sequence.length ? this.currentStepIndex + 1 : 0;
+        var nextStepType = this.technique.sequence[nextStepIndex].type;
+
+        switch (this.step.type) {
+          case "inhale":
+            if (previousStepType != this.step.type && nextStepType != this.step.type) {
+              val = 1 + percent;
+            } else if (nextStepType == this.step.type) {
+              val = 1 + percent / 2;
+              this.lastScaleValue = val;
+            } else if (previousStepType == this.step.type) {
+              val = this.lastScaleValue + percent / 2;
+            }
+            break;
+
+          case "hold":
+            val = 2;
+            break;
+
+          case "exhale":
+            val = 2 - percent;
+            break;
+
+          default:
+            val = 1;
+            break;
         }
+
+        return val;
       },
       degrees() {
-        var current = this.inhale + this.exhale;
-        var total = this.inhaleMax + this.exhaleMax;
+        var total = this.arraySum(this.technique.sequence.map((step) => step.duration));
+        var current = this.arraySum(this.technique.sequence.map((step) => step.current));
         return Math.floor((current * 360) / total);
       },
     },
     methods: {
+      arraySum(array) {
+        return array.reduce((a, b) => a + b, 0);
+      },
+      setTechnique(val) {
+        this.stopTimer();
+        val.sequence.forEach((step) => {
+          step.current = 0;
+        });
+        console.log(JSON.stringify(this.technique));
+      },
       startTimer() {
         this.timeout = setTimeout(this.updateValues, 10);
-        this.timeoutInProgress = true;
+
+        if (!this.timeoutInProgress) {
+          this.timeoutInProgress = true;
+        }
       },
       stopTimer() {
         clearTimeout(this.timeout);
         this.timeoutInProgress = false;
       },
       resetValues() {
-        this.exhale = 0;
-        this.inhale = 0;
+        this.currentStepIndex = 0;
+        this.technique.sequence.forEach((step) => {
+          step.current = 0;
+        });
       },
       updateValues() {
-        if (this.remaining == 0) {
+        if (this.step.current >= this.step.duration) {
+          this.currentStepIndex += 1;
+        }
+
+        if (this.currentStepIndex >= this.technique.sequence.length) {
           this.resetValues();
         }
 
-        if (this.inhale < this.inhaleMax) {
-          if (this.inhale == 0) {
-            this.currentAction = "inhale";
+        if (this.step.current < this.step.duration) {
+          if (this.step.current == 0) {
+            this.currentAction = this.step.type;
+            this.currentActionDetail = this.step.detail;
           }
-          this.inhale += 1;
-        } else if (this.exhale < this.exhaleMax) {
-          if (this.exhale == 0) {
-            this.currentAction = "exhale";
-          }
-          this.exhale += 1;
+
+          this.step.current += 1;
         }
 
         this.startTimer();
       },
+    },
+    watch: {
+      technique(newVal, oldVal) {
+        this.setTechnique(newVal);
+      },
+    },
+    created() {
+      this.setTechnique(this.technique);
     },
   };
 </script>
@@ -179,8 +244,10 @@
     }
 
     .action {
+      text-align: center;
       > span {
-        padding: 5vw;
+        padding: 0;
+        display: block;
       }
     }
   }

@@ -14,6 +14,7 @@ const vuexLocal = new VuexPersistence({
 export default createStore({
   state: {
     userLocale: "",
+    breathTechniqueIndex: 0,
     breathTechnique: {},
     breathTechniques: [
       {
@@ -21,11 +22,15 @@ export default createStore({
         sequence: [
           {
             type: "inhale",
-            length: 4,
+            detail: "",
+            color: "#2196f3",
+            duration: 400,
           },
           {
             type: "exhale",
-            length: 6,
+            detail: "",
+            color: "#f44336",
+            duration: 600,
           },
         ],
       },
@@ -35,17 +40,20 @@ export default createStore({
           {
             type: "inhale",
             detail: "",
-            length: 4,
+            color: "#2196f3",
+            duration: 400,
           },
           {
             type: "hold",
             detail: "",
-            length: 2,
+            color: "lightgreen",
+            duration: 200,
           },
           {
             type: "exhale",
             detail: "",
-            length: 4,
+            color: "#f44336",
+            duration: 400,
           },
         ],
       },
@@ -55,17 +63,20 @@ export default createStore({
           {
             type: "inhale",
             detail: "stomach",
-            length: 2.5,
+            color: "#64b5f6",
+            duration: 250,
           },
           {
             type: "inhale",
             detail: "chest",
-            length: 2.5,
+            color: "#1976d2",
+            duration: 250,
           },
           {
             type: "exhale",
             detail: "",
-            length: 5,
+            color: "#f44336",
+            duration: 500,
           },
         ],
       },
@@ -75,22 +86,26 @@ export default createStore({
           {
             type: "inhale",
             detail: "",
-            length: 4,
+            color: "#2196f3",
+            duration: 400,
           },
           {
             type: "hold",
             detail: "",
-            length: 4,
+            color: "lightgreen",
+            duration: 400,
           },
           {
             type: "exhale",
             detail: "",
-            length: 4,
+            color: "#f44336",
+            duration: 400,
           },
           {
             type: "hold",
             detail: "",
-            length: 4,
+            color: "lightgreen",
+            duration: 400,
           },
         ],
       },
@@ -99,11 +114,15 @@ export default createStore({
         sequence: [
           {
             type: "inhale",
-            length: 4,
+            detail: "",
+            color: "#2196f3",
+            duration: 400,
           },
           {
             type: "exhale",
-            length: 2,
+            detail: "",
+            color: "#f44336",
+            duration: 200,
           },
         ],
       },
@@ -113,17 +132,20 @@ export default createStore({
           {
             type: "inhale",
             detail: "",
-            length: 4,
+            color: "#2196f3",
+            duration: 400,
           },
           {
             type: "hold",
             detail: "",
-            length: 7,
+            color: "lightgreen",
+            duration: 700,
           },
           {
             type: "exhale",
             detail: "",
-            length: 8,
+            color: "#f44336",
+            duration: 800,
           },
         ],
       },
@@ -149,7 +171,7 @@ export default createStore({
       } else {
         this.commit({
           type: "setTechnique",
-          technique: state.breathTechniques[0],
+          technique: state.breathTechniques[state.breathTechniqueIndex],
         });
         localStorage.setItem(vuexPersistKey, JSON.stringify(state));
       }

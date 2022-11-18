@@ -3,7 +3,9 @@
   "messages": {
     "inhale": "Inhale",
     "exhale": "Exhale",
-    "hold": "Hold"
+    "hold": "Hold",
+    "stomach": "(stomach)",
+    "chest": "(chest)"
   },
   "sequences": {
     "relax": {
