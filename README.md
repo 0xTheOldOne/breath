@@ -9,6 +9,7 @@
 <div>
   <img align="right" src="https://github-readme-stats.vercel.app/api/pin/?username=0xTheOldOne&repo=breath" />
   <p>This app is made with VueJS and is meant to help you practice deep breathe in order to relax.</p>
+  <p>Disclaimer : I was greatly inspired by the famous relaxation application called <a href="https://www.calm.com/fr">Calm</a> when i wrote this app. I use it, it's great and i love it !</p>
 </div>
 
 <div class="mb-5">&nbsp;</div>
