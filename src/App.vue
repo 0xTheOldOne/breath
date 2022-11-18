@@ -14,6 +14,7 @@
   export default {
     name: "App",
     beforeCreate() {
+      this.$store.commit("resetLocalStorage");
       this.$store.commit("initializeFromLocalStorage");
     },
     data() {
