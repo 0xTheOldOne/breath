@@ -75,7 +75,7 @@ export default createStore({
           {
             type: "inhale",
             detail: "chest",
-            color: "#64b5f660",
+            color: "#7986cb60",
             duration: 250,
           },
           {
