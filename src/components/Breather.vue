@@ -14,14 +14,14 @@
   <div class="breath-controller">
     <span class="material-symbols-outlined" v-if="!timeoutInProgress" v-on:click="startTimer"> play_circle </span>
   </div>
-  <div class="technique-infos">
+  <div class="technique-infos" v-if="!timeoutInProgress">
     <div class="title">
       {{ $t("sequences." + technique.code + ".title") }}
     </div>
     <div class="description">
       {{ $t("sequences." + technique.code + ".description") }}
     </div>
-    <div v-if="true || technique.advanced">
+    <div v-if="technique.advanced">
       <span class="badge rounded-pill bg-light text-dark">{{ $t("messages.advanced") }}</span>
     </div>
   </div>
@@ -222,6 +222,8 @@
     height: @size;
     max-width: @max-size;
     max-height: @max-size;
+    margin: 0 auto;
+    margin-top: -16vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -271,6 +273,11 @@
   }
 
   .technique-infos {
+    width: @size;
+    height: @size;
+    max-width: @max-size;
+    max-height: @max-size;
+    margin: 0 auto;
     text-align: center;
     padding: 1rem 0px;
 

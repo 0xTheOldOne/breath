@@ -14,7 +14,6 @@
       <router-view />
     </div>
   </div>
-  <!-- {{ $i18n.locale }} -->
 </template>
 
 <script>
@@ -114,6 +113,7 @@
 
         .mobile {
           display: block;
+          width: 100%;
         }
       }
     }
@@ -125,6 +125,7 @@
         #app {
           .web {
             display: block;
+            width: 100%;
           }
 
           .mobile {
