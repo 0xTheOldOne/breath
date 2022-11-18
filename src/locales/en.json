@@ -5,32 +5,33 @@
     "exhale": "Exhale",
     "hold": "Hold",
     "stomach": "(stomach)",
-    "chest": "(chest)"
+    "chest": "(chest)",
+    "advanced": "Advanced"
   },
   "sequences": {
     "relax": {
-      "title": "Relax",
-      "description": ""
+      "title": "Relaxation",
+      "description": "Calm your mind and ease your stress"
     },
     "balance": {
       "title": "Balance",
-      "description": ""
+      "description": "Relax your body and be more in the moment"
     },
     "energy": {
-      "title": "Energetic",
-      "description": ""
+      "title": "Energy",
+      "description": "Strengthen your body and regain energy"
     },
     "focus": {
       "title": "Focus",
-      "description": ""
+      "description": "Sharpen your focus and improve your performance"
     },
     "dynamism": {
-      "title": "Dynamic",
-      "description": ""
+      "title": "Dynamism",
+      "description": "Boost your energy and focus"
     },
     "chill": {
-      "title": "Chill",
-      "description": ""
+      "title": "Relaxation",
+      "description": "Release the pressure and ease your mind"
     }
   }
 }

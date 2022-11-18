@@ -19,6 +19,8 @@ export default createStore({
     breathTechniques: [
       {
         code: "relax",
+        durationInMinutes: 5,
+        advanced: false,
         sequence: [
           {
             type: "inhale",
@@ -36,6 +38,8 @@ export default createStore({
       },
       {
         code: "balance",
+        durationInMinutes: 2,
+        advanced: false,
         sequence: [
           {
             type: "inhale",
@@ -59,6 +63,8 @@ export default createStore({
       },
       {
         code: "energy",
+        durationInMinutes: 2,
+        advanced: false,
         sequence: [
           {
             type: "inhale",
@@ -82,6 +88,8 @@ export default createStore({
       },
       {
         code: "focus",
+        durationInMinutes: 2,
+        advanced: false,
         sequence: [
           {
             type: "inhale",
@@ -111,6 +119,8 @@ export default createStore({
       },
       {
         code: "dynamism",
+        durationInMinutes: 1,
+        advanced: true,
         sequence: [
           {
             type: "inhale",
@@ -128,6 +138,8 @@ export default createStore({
       },
       {
         code: "chill",
+        durationInMinutes: 2,
+        advanced: true,
         sequence: [
           {
             type: "inhale",

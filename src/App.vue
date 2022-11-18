@@ -1,5 +1,5 @@
 <template>
-  <div class="title">{{ $t("title") }}</div>
+  <div class="appname">{{ $t("title") }}</div>
   <div class="web">
     <div class="container">
       <div class="row">
@@ -99,7 +99,7 @@
         align-items: center;
         justify-content: center;
 
-        .title {
+        .appname {
           position: fixed;
           top: 5vh;
           width: 100%;
