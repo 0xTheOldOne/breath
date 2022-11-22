@@ -78,6 +78,11 @@
               enabled: false,
             },
           },
+          elements: {
+            arc: {
+              spacing: 0,
+            },
+          },
         },
       };
     },
@@ -94,8 +99,8 @@
         var max = this.arraySum(this.technique.sequence.map((step) => step.duration));
         var data = this.technique.sequence.map((step) => step.duration);
         var done = this.technique.sequence.map((step) => step.current);
-        var colors_data = this.technique.sequence.map((step) => step.color);
-        var colors_done = this.technique.sequence.map((step) => step.color.toString().substr(0, 7));
+        var colors_data = this.technique.sequence.map((step) => step.color + "C0");
+        var colors_done = this.technique.sequence.map((step) => step.color + "60");
 
         done.push(this.remaining);
         colors_done.push("transparent");
@@ -103,19 +108,17 @@
         return {
           datasets: [
             {
-              data: done,
-              backgroundColor: colors_done,
-              cutout: "90%",
-              borderRadius: 0,
-              borderWidth: 10,
-              borderColor: "transparent",
-            },
-            {
               data: data,
               backgroundColor: colors_data,
               cutout: "95%",
-              borderRadius: 0,
-              borderWidth: 10,
+              borderRadius: 30,
+              borderColor: "transparent",
+            },
+            {
+              data: done,
+              backgroundColor: colors_done,
+              cutout: "90%",
+              borderRadius: 30,
               borderColor: "transparent",
             },
           ],
@@ -171,7 +174,7 @@
         val.sequence.forEach((step) => {
           step.current = 0;
         });
-        console.log(JSON.stringify(this.technique));
+        console.debug("🧘‍♂️ Breath sequence '" + this.technique.code + "' loaded...");
       },
       startTimer() {
         this.timeout = setTimeout(this.updateValues, 10);
@@ -277,6 +280,7 @@
           font-size: 1rem;
           line-height: 1rem;
           display: block;
+          padding: 10px;
         }
       }
     }

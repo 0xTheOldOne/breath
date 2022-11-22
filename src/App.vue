@@ -1,4 +1,7 @@
 <template>
+  <!-- <audio ref="ambiance" id="ambiance_audio" hidden preload loop muted>
+    <source src="./assets/loop_forest-stream-birds-sound.mp3" />
+  </audio> -->
   <div class="appname">{{ $t("title") }}</div>
   <div class="router-view">
     <router-view />
@@ -14,7 +17,6 @@
   export default {
     name: "App",
     beforeCreate() {
-      this.$store.commit("resetLocalStorage");
       this.$store.commit("initializeFromLocalStorage");
     },
     data() {

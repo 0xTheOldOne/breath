@@ -11,6 +11,20 @@ const vuexLocal = new VuexPersistence({
   }),
 });
 
+const colors = {
+  inhale: {
+    default: "#3186C9",
+    stomach: "#386EB3",
+    chest: "#40A8C7",
+  },
+  exhale: {
+    default: "#E7AF19",
+  },
+  hold: {
+    default: "#8ABB86",
+  },
+};
+
 export default createStore({
   state: {
     userLocale: "",
@@ -25,13 +39,13 @@ export default createStore({
           {
             type: "inhale",
             detail: "",
-            color: "#64b5f660",
+            color: colors.inhale.default,
             duration: 400,
           },
           {
             type: "exhale",
             detail: "",
-            color: "#e5737360",
+            color: colors.exhale.default,
             duration: 600,
           },
         ],
@@ -44,19 +58,19 @@ export default createStore({
           {
             type: "inhale",
             detail: "",
-            color: "#64b5f660",
+            color: colors.inhale.default,
             duration: 400,
           },
           {
             type: "hold",
             detail: "",
-            color: "#81c78430",
+            color: colors.hold.default,
             duration: 200,
           },
           {
             type: "exhale",
             detail: "",
-            color: "#e5737360",
+            color: colors.exhale.default,
             duration: 400,
           },
         ],
@@ -69,19 +83,19 @@ export default createStore({
           {
             type: "inhale",
             detail: "stomach",
-            color: "#64b5f660",
+            color: colors.inhale.stomach,
             duration: 250,
           },
           {
             type: "inhale",
             detail: "chest",
-            color: "#7986cb60",
+            color: colors.inhale.chest,
             duration: 250,
           },
           {
             type: "exhale",
             detail: "",
-            color: "#e5737360",
+            color: colors.exhale.default,
             duration: 500,
           },
         ],
@@ -94,25 +108,25 @@ export default createStore({
           {
             type: "inhale",
             detail: "",
-            color: "#64b5f660",
+            color: colors.inhale.default,
             duration: 400,
           },
           {
             type: "hold",
             detail: "",
-            color: "#81c78430",
+            color: colors.hold.default,
             duration: 400,
           },
           {
             type: "exhale",
             detail: "",
-            color: "#e5737360",
+            color: colors.exhale.default,
             duration: 400,
           },
           {
             type: "hold",
             detail: "",
-            color: "#81c78430",
+            color: colors.hold.default,
             duration: 400,
           },
         ],
@@ -125,13 +139,13 @@ export default createStore({
           {
             type: "inhale",
             detail: "",
-            color: "#64b5f660",
+            color: colors.inhale.default,
             duration: 400,
           },
           {
             type: "exhale",
             detail: "",
-            color: "#e5737360",
+            color: colors.exhale.default,
             duration: 200,
           },
         ],
@@ -144,19 +158,19 @@ export default createStore({
           {
             type: "inhale",
             detail: "",
-            color: "#64b5f660",
+            color: colors.inhale.default,
             duration: 400,
           },
           {
             type: "hold",
             detail: "",
-            color: "#81c78430",
+            color: colors.hold.default,
             duration: 700,
           },
           {
             type: "exhale",
             detail: "",
-            color: "#e5737360",
+            color: colors.exhale.default,
             duration: 800,
           },
         ],
