@@ -209,6 +209,7 @@
         });
       },
       updateValues() {
+        console.log("update");
         this.timeoutTotalTimeElapsed += this.timeoutInMs;
 
         if (this.step.current >= this.step.duration) {
@@ -230,6 +231,14 @@
 
         this.startTimer();
       },
+    },
+    watch: {
+      technique(newVal, oldVal) {
+        this.setTechnique(newVal);
+      },
+    },
+    created() {
+      this.setTechnique(this.technique);
     },
   };
 </script>
