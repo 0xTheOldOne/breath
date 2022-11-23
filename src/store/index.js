@@ -7,7 +7,7 @@ const vuexLocal = new VuexPersistence({
   storage: window.localStorage,
   reducer: (state) => ({
     userLocale: state.userLocale,
-    breathTechnique: state.breathTechnique,
+    breathTechniqueIndex: state.breathTechniqueIndex,
   }),
 });
 
@@ -208,9 +208,9 @@ export default createStore({
       console.debug(payload);
       state.userLocale = payload.locale;
     },
-    setTechnique(state, payload) {
+    setTechniqueIndex(state, payload) {
       console.debug(payload);
-      state.breathTechnique = payload.technique;
+      state.breathTechniqueIndex = payload.index;
     },
   },
   actions: {},

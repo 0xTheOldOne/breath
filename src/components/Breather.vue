@@ -231,14 +231,6 @@
         this.startTimer();
       },
     },
-    watch: {
-      technique(newVal, oldVal) {
-        this.setTechnique(newVal);
-      },
-    },
-    created() {
-      this.setTechnique(this.technique);
-    },
   };
 </script>
 
@@ -284,7 +276,7 @@
             top: calc(-@size / 2);
             background-color: white;
             transform: rotate(45deg);
-            border-radius: calc(0.1 * @size);
+            border-radius: @size;
           }
         }
       }
@@ -360,7 +352,9 @@
     }
 
     code {
-      font-family: monospace;
+      font-family: "Share Tech Mono", monospace;
+      color: white;
+      text-shadow: 0px 0px 0.25rem fade(black, 50%);
     }
   }
 
