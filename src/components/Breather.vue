@@ -2,7 +2,7 @@
   <div class="breath-container" :class="timeoutInProgress ? 'running' : 'idle'">
     <div class="breath" v-if="timeoutInProgress">
       <div class="doughnut-container">
-        <div class="ticker" :style="'transform: rotate(' + degrees + 'deg);'"></div>
+        <div class="ticker" :style="'transform: rotate(' + degrees + 'deg);'" ticker-color="red"></div>
         <Doughnut class="doughnut" ref="chart" :chart-data="chartData" :chart-options="chartOptions" />
       </div>
       <div class="action" :style="'transform: scale(' + scale + ');'">
@@ -19,13 +19,21 @@
     </div>
     <div class="technique-infos" v-if="!timeoutInProgress">
       <div class="title">
-        {{ $t("sequences." + technique.code + ".title") }}
+        {{ $t("sequences." + technique.code + ".title") }} (<span v-for="(step, index) in technique.sequence">
+          <span>{{ step.duration / 100 }}</span>
+          <span v-if="index < technique.sequence.length - 1">&nbsp;-&nbsp;</span> </span
+        >)
       </div>
       <div class="description">
         {{ $t("sequences." + technique.code + ".description") }}
       </div>
       <div v-if="technique.advanced">
         <span class="badge rounded-pill bg-light text-dark">{{ $t("messages.advanced") }}</span>
+      </div>
+    </div>
+    <div class="technique-infos" v-if="timeoutInProgress">
+      <div class="description">
+        <code>{{ elapsed }}</code>
       </div>
     </div>
     <div class="breath-controller bottom" v-if="timeoutInProgress">
@@ -58,11 +66,14 @@
     data() {
       return {
         timeout: null,
+        timeoutInMs: 10,
         timeoutInProgress: false,
+        timeoutTotalTimeElapsed: 0,
         currentAction: "",
         currentActionDetail: "",
         currentStepIndex: 0,
         lastScaleValue: 1,
+        lastScaleType: "",
         chartOptions: {
           borderWidth: 0,
           circumference: 360,
@@ -164,6 +175,9 @@
         var current = this.arraySum(this.technique.sequence.map((step) => step.current));
         return Math.floor((current * 360) / total);
       },
+      elapsed() {
+        return new Date(this.timeoutTotalTimeElapsed).toISOString().slice(11, -1).substring(8, -1);
+      },
     },
     methods: {
       arraySum(array) {
@@ -177,7 +191,7 @@
         console.debug("🧘‍♂️ Breath sequence '" + this.technique.code + "' loaded...");
       },
       startTimer() {
-        this.timeout = setTimeout(this.updateValues, 10);
+        this.timeout = setTimeout(this.updateValues, this.timeoutInMs);
 
         if (!this.timeoutInProgress) {
           this.timeoutInProgress = true;
@@ -186,6 +200,7 @@
       stopTimer() {
         clearTimeout(this.timeout);
         this.timeoutInProgress = false;
+        this.timeoutTotalTimeElapsed = 0;
       },
       resetValues() {
         this.currentStepIndex = 0;
@@ -194,6 +209,8 @@
         });
       },
       updateValues() {
+        this.timeoutTotalTimeElapsed += this.timeoutInMs;
+
         if (this.step.current >= this.step.duration) {
           this.currentStepIndex += 1;
         }
@@ -227,6 +244,11 @@
 
 <style lang="less" scoped>
   .breath-container {
+    * {
+      color: #333;
+      text-shadow: 0px 0px 0.25rem fade(white, 50%);
+    }
+
     .breath {
       margin: 0 auto;
       position: relative;
@@ -253,7 +275,7 @@
           position: absolute;
 
           &:before {
-            @size: 2rem;
+            @size: 1rem;
             content: "";
             position: absolute;
             width: @size;
@@ -262,6 +284,7 @@
             top: calc(-@size / 2);
             background-color: white;
             transform: rotate(45deg);
+            border-radius: calc(0.1 * @size);
           }
         }
       }
@@ -287,6 +310,21 @@
 
     .breath-controller {
       text-align: center;
+
+      .material-symbols-outlined {
+        cursor: pointer;
+        font-size: 10rem;
+        margin: 0 2rem;
+        color: white;
+        text-shadow: 0px 0px 0.25rem fade(black, 50%);
+      }
+
+      &.bottom {
+        .material-symbols-outlined {
+          font-size: 5rem !important;
+          margin-top: 2rem !important;
+        }
+      }
     }
 
     .technique-infos {
@@ -294,11 +332,6 @@
       margin: 0 auto;
       text-align: center;
       padding: 1rem 0px;
-
-      * {
-        color: black;
-        text-shadow: 0px 0px 0.25rem fade(white, 50%);
-      }
 
       .title {
         font-size: 1.5rem;
@@ -314,14 +347,6 @@
       }
     }
 
-    .material-symbols-outlined {
-      cursor: pointer;
-      font-size: 10rem;
-      margin: 0 2rem;
-      color: white;
-      text-shadow: 0px 0px 0.25rem fade(black, 50%);
-    }
-
     &.running {
       .breath-controller {
         &.bottom {
@@ -333,9 +358,13 @@
     &.idle {
       padding-top: 6rem;
     }
+
+    code {
+      font-family: monospace;
+    }
   }
 
-  @media (max-width: 912px) {
+  @media (max-width: 768px) {
     .ticker {
       position: absolute;
 
@@ -347,19 +376,14 @@
         top: calc(-@size / 2) !important;
       }
     }
-
-    .material-symbols-outlined {
-      font-size: 4rem !important;
-    }
   }
 
-  @media (min-width: 913px) {
+  @media (min-width: 769px) {
     .breath-container {
       .breath {
         .action {
           > span {
             font-size: 2rem !important;
-            line-height: 2rem !important;
           }
         }
       }
@@ -368,6 +392,7 @@
         .title {
           font-size: 3rem !important;
         }
+
         .description {
           font-size: 2rem !important;
         }

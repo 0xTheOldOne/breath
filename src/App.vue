@@ -121,9 +121,6 @@
   @media (max-width: 913px) {
     html {
       body {
-        background: url("./assets/background_mobile.jpg") center bottom no-repeat;
-        background-size: cover;
-
         #app {
           .router-view {
             padding: 0px !important;
