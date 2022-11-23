@@ -2,7 +2,7 @@
   <!-- <audio ref="ambiance" id="ambiance_audio" hidden preload loop muted>
     <source src="./assets/loop_forest-stream-birds-sound.mp3" />
   </audio> -->
-  <div class="appname">{{ $t("title") }}</div>
+  <Menu />
   <div class="router-view">
     <router-view />
   </div>
@@ -13,11 +13,15 @@
   import { mapState, mapGetters } from "vuex";
   import { getSupportedLocales } from "./locales/helper";
   import { getBrowserLocale } from "./locales/helper";
+  import Menu from "@/components/Menu.vue";
 
   export default {
     name: "App",
     beforeCreate() {
       this.$store.commit("initializeFromLocalStorage");
+    },
+    components: {
+      Menu,
     },
     data() {
       return {
@@ -87,15 +91,6 @@
         align-items: center;
         justify-content: space-between;
         flex-direction: column;
-
-        .appname {
-          text-align: center;
-          font-size: 5rem;
-          font-family: @font-title;
-
-          color: @text-color-light;
-          text-shadow: @shadow-light;
-        }
 
         .router-view {
           width: 100%;
