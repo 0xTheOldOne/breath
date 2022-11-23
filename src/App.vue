@@ -56,6 +56,8 @@
 </script>
 
 <style lang="less">
+  @import url("@/assets/style/variables.less");
+
   html,
   body {
     padding: 0px;
@@ -67,21 +69,15 @@
 
   html {
     body {
-      font-size: 16px;
-      background: url("./assets/background.jpg") center bottom no-repeat;
+      font-size: @font-size;
+      background: url("./assets/images/background.jpg") center bottom no-repeat;
       background-size: cover;
 
       * {
-        font-family: "Montserrat", sans-serif;
+        font-family: @font-text;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-        color: white;
-        text-shadow: 0px 0px 10px fade(black, 50%);
         overflow: hidden;
-      }
-
-      .alert {
-        font-family: Arial, Helvetica, sans-serif;
       }
 
       #app {
@@ -95,18 +91,24 @@
         .appname {
           text-align: center;
           font-size: 5rem;
-          font-family: "Lobster Two", cursive;
+          font-family: @font-title;
+
+          color: @text-color-light;
+          text-shadow: @shadow-light;
         }
 
         .router-view {
           width: 100%;
-          padding: 10px;
+          color: @text-color;
+          text-shadow: @shadow;
         }
 
         .disclaimer {
           font-size: 1rem;
           text-align: center;
           padding: 10px;
+          color: @text-color-light;
+          text-shadow: @shadow-light;
 
           a {
             color: inherit;
@@ -118,13 +120,11 @@
     }
   }
 
-  @media (max-width: 913px) {
+  @media (max-width: @screen-xs-max) {
     html {
       body {
         #app {
-          .router-view {
-            padding: 0px !important;
-          }
+          padding: 10px;
 
           .disclaimer {
             font-size: 0.7rem !important;

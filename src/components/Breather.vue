@@ -7,10 +7,10 @@
       </div>
       <div class="action" :style="'transform: scale(' + scale + ');'">
         <span v-if="currentAction != ''">
-          {{ $t("messages." + currentAction) }}
-        </span>
-        <span v-if="currentActionDetail != ''">
-          {{ $t("messages." + currentActionDetail) }}
+          {{ $t("messages." + currentAction) }}<br />
+          <span v-if="currentActionDetail != ''">
+            {{ $t("messages." + currentActionDetail) }}
+          </span>
         </span>
       </div>
     </div>
@@ -98,6 +98,9 @@
       };
     },
     computed: {
+      ...mapState({
+        breathTechniqueIndex: (state) => state.breathTechniqueIndex,
+      }),
       step() {
         return this.technique.sequence[this.currentStepIndex];
       },
@@ -148,7 +151,7 @@
             if (previousStepType != this.step.type && nextStepType != this.step.type) {
               val = 1 + percent;
             } else if (nextStepType == this.step.type) {
-              val = 1 + percent / 2;
+              val = this.lastScaleValue + percent / 2;
               this.lastScaleValue = val;
             } else if (previousStepType == this.step.type) {
               val = this.lastScaleValue + percent / 2;
@@ -201,6 +204,8 @@
         clearTimeout(this.timeout);
         this.timeoutInProgress = false;
         this.timeoutTotalTimeElapsed = 0;
+
+        this.resetValues();
       },
       resetValues() {
         this.currentStepIndex = 0;
@@ -236,6 +241,9 @@
       technique(newVal, oldVal) {
         this.setTechnique(newVal);
       },
+      breathTechniqueIndex(newVal, oldVal) {
+        this.stopTimer();
+      },
     },
     created() {
       this.setTechnique(this.technique);
@@ -244,12 +252,20 @@
 </script>
 
 <style lang="less" scoped>
-  .breath-container {
-    * {
-      color: #333;
-      text-shadow: 0px 0px 0.25rem fade(white, 50%);
-    }
+  @import url("@/assets/style/variables.less");
 
+  * {
+    color: @text-color;
+    text-shadow: @shadow;
+  }
+
+  .material-symbols-outlined {
+    cursor: pointer;
+    color: @text-color-light;
+    text-shadow: @shadow-light;
+  }
+
+  .breath-container {
     .breath {
       margin: 0 auto;
       position: relative;
@@ -313,11 +329,8 @@
       text-align: center;
 
       .material-symbols-outlined {
-        cursor: pointer;
         font-size: 10rem;
         margin: 0 2rem;
-        color: white;
-        text-shadow: 0px 0px 0.25rem fade(black, 50%);
       }
 
       &.bottom {
@@ -361,9 +374,8 @@
     }
 
     code {
-      font-family: "Share Tech Mono", monospace;
-      color: white;
-      text-shadow: 0px 0px 0.25rem fade(black, 50%);
+      font-size: 1.5rem;
+      font-family: @font-monospaced;
     }
   }
 

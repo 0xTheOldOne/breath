@@ -59,13 +59,15 @@
 </script>
 
 <style lang="less" scoped>
+  @import url("@/assets/style/variables.less");
+
   #breathCarousel {
     button[class*="carousel-control-"] {
-      width: 10%;
+      width: 20%;
     }
   }
 
-  @media (max-width: 913px) {
+  @media (max-width: @screen-xs-max) {
     button[class*="carousel-control-"] {
       width: 10% !important;
     }

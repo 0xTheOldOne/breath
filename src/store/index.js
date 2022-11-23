@@ -43,6 +43,12 @@ export default createStore({
             duration: 400,
           },
           {
+            type: "hold",
+            detail: "",
+            color: colors.hold.default,
+            duration: 200,
+          },
+          {
             type: "exhale",
             detail: "",
             color: colors.exhale.default,

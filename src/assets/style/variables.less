@@ -1,0 +1,34 @@
+// Fonts
+@font-text: "Montserrat", sans-serif;
+@font-title: "Lobster Two", cursive;
+@font-monospaced: "Share Tech Mono", monospace;
+
+// Sizes
+@font-size: 16px;
+
+// Colors
+@text-color: #333;
+@text-color-light: #fff;
+@shadow: 0px 0px 10px fade(@text-color-light, 50%);
+@shadow-light: 0px 0px 10px fade(@text-color, 50%);
+
+// Extra small screen / phone
+@screen-sm: 768px;
+@screen-sm-min: @screen-sm;
+@screen-md: 992px;
+@screen-md-min: @screen-md;
+@screen-lg: 1200px;
+@screen-lg-min: @screen-lg;
+@screen-xlg: 1367px;
+
+// So media queries don't overlap when required, provide a maximum
+@screen-xs-max: (@screen-sm-min - 1);
+@screen-sm-max: (@screen-md-min - 1);
+@screen-md-max: (@screen-lg-min - 1);
+
+// z-indexes
+@z-index-100: 100;
+@z-index-200: 200;
+@z-index-300: 300;
+@z-index-400: 400;
+@z-index-500: 500;
