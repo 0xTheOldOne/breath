@@ -72,8 +72,6 @@
         currentAction: "",
         currentActionDetail: "",
         currentStepIndex: 0,
-        lastScaleValue: 1,
-        lastScaleType: "",
         chartOptions: {
           borderWidth: 0,
           circumference: 360,
@@ -101,6 +99,16 @@
       ...mapState({
         breathTechniqueIndex: (state) => state.breathTechniqueIndex,
       }),
+      previousStep() {
+        var previousIndex = this.currentStepIndex - 1;
+        var index = previousIndex >= 0 ? previousIndex : this.technique.sequence.length - 1;
+        return this.technique.sequence[index];
+      },
+      nextStep() {
+        var nextIndex = this.currentStepIndex + 1;
+        var index = nextIndex < this.technique.sequence.length ? nextIndex : 0;
+        return this.technique.sequence[index];
+      },
       step() {
         return this.technique.sequence[this.currentStepIndex];
       },
@@ -140,22 +148,21 @@
       },
       scale() {
         var val = 1;
-        var percent = this.step.current / this.step.duration;
-        var previousStepIndex = this.currentStepIndex - 1 > 0 ? this.currentStepIndex - 1 : this.technique.sequence.length - 1;
-        var previousStepType = this.technique.sequence[previousStepIndex].type;
-        var nextStepIndex = this.currentStepIndex + 1 < this.technique.sequence.length ? this.currentStepIndex + 1 : 0;
-        var nextStepType = this.technique.sequence[nextStepIndex].type;
+        var current = this.step.current;
+        var duration = this.step.duration;
+
+        if (this.nextStep.type == this.step.type) {
+          duration += this.nextStep.duration;
+        } else if (this.previousStep.type == this.step.type) {
+          current += this.previousStep.duration;
+          duration += this.previousStep.duration;
+        }
+
+        var percent = current / duration;
 
         switch (this.step.type) {
           case "inhale":
-            if (previousStepType != this.step.type && nextStepType != this.step.type) {
-              val = 1 + percent;
-            } else if (nextStepType == this.step.type) {
-              val = this.lastScaleValue + percent / 2;
-              this.lastScaleValue = val;
-            } else if (previousStepType == this.step.type) {
-              val = this.lastScaleValue + percent / 2;
-            }
+            val = 1 + percent;
             break;
 
           case "hold":
@@ -214,7 +221,6 @@
         });
       },
       updateValues() {
-        console.log("update");
         this.timeoutTotalTimeElapsed += this.timeoutInMs;
 
         if (this.step.current >= this.step.duration) {
@@ -317,10 +323,15 @@
         flex-direction: column;
 
         > span {
-          font-size: 1rem;
-          line-height: 1rem;
+          font-size: 2rem;
           display: block;
           padding: 10px;
+          text-align: center;
+
+          > span {
+            font-size: 80%;
+            line-height: 1em;
+          }
         }
       }
     }
@@ -348,85 +359,87 @@
       padding: 1rem 0px;
 
       .title {
-        font-size: 1.5rem;
+        font-size: 3rem;
       }
 
       .description {
-        font-size: 1rem;
+        font-size: 2rem;
       }
 
       .badge {
-        margin-top: 0.5rem;
+        margin-top: 1rem;
         font-size: 0.8rem;
       }
+    }
+
+    &.idle {
+      padding-top: 9rem;
     }
 
     &.running {
       .breath-controller {
         &.bottom {
-          margin-top: 1rem;
+          margin-top: 3rem;
         }
       }
     }
 
-    &.idle {
-      padding-top: 6rem;
-    }
-
     code {
       font-size: 1.5rem;
+      font-weight: 300;
       font-family: @font-monospaced;
     }
   }
 
-  @media (max-width: 768px) {
-    .ticker {
-      position: absolute;
-
-      &:before {
-        @size: 1rem;
-        width: @size !important;
-        height: @size !important;
-        left: calc(50% - @size / 2) !important;
-        top: calc(-@size / 2) !important;
-      }
-    }
-  }
-
-  @media (min-width: 769px) {
+  @media (max-width: @screen-xs-max) {
     .breath-container {
+      .ticker {
+        position: absolute;
+
+        &:before {
+          @size: 1rem;
+          width: @size !important;
+          height: @size !important;
+          left: calc(50% - @size / 2) !important;
+          top: calc(-@size / 2) !important;
+        }
+      }
+
       .breath {
         .action {
           > span {
-            font-size: 2rem !important;
+            font-size: 1rem !important;
           }
         }
       }
 
       .technique-infos {
         .title {
-          font-size: 3rem !important;
+          font-size: 1.5rem !important;
         }
 
         .description {
-          font-size: 2rem !important;
+          font-size: 1rem !important;
         }
 
         .badge {
-          font-size: 1rem !important;
+          font-size: 0.8rem !important;
+          margin-top: 0.5rem !important;
         }
       }
 
       &.running {
         .breath-controller {
-          &.bottom {
-            margin-top: 3rem !important;
+          margin: 0px !important;
+
+          .material-symbols-outlined {
+            margin-top: 0px !important;
           }
         }
       }
 
       &.idle {
-        padding-top: 9rem !important;
+        padding-top: 6rem !important;
       }
     }
   }
