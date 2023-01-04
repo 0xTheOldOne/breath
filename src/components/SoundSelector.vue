@@ -1,24 +1,16 @@
 <template>
   <div class="sound-selector">
     <div class="section">
-      <div class="title">
-        <span class="material-symbols-outlined"> library_music </span>
-        Music
-      </div>
+      <div class="title">Music</div>
       <div class="content">
         <p>Content</p>
         <span class="material-symbols-outlined"> music_off </span>
       </div>
     </div>
     <div class="section">
-      <div class="title">
-        <span class="material-symbols-outlined"> library_music </span>
-        Sounds
-      </div>
+      <div class="title">Sounds</div>
       <div class="content">
         <p>Content</p>
-        <span class="material-symbols-outlined"> audio_file </span>
-        <span class="material-symbols-outlined"> audio_file </span>
       </div>
     </div>
   </div>
@@ -45,5 +37,19 @@
 
   .sound-selector {
     width: 100%;
+
+    * {
+      text-align: center;
+    }
+
+    .section {
+      margin: 1rem 0;
+
+      .title {
+        font-weight: bold;
+      }
+      .content {
+      }
+    }
   }
 </style>

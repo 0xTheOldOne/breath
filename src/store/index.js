@@ -32,6 +32,43 @@ export default createStore({
     breathTechnique: {},
     breathTechniques: [
       {
+        code: "emergency",
+        durationInMinutes: 1,
+        advanced: true,
+        sequence: [
+          {
+            type: "inhale",
+            detail: "",
+            color: colors.inhale.default,
+            duration: 150,
+          },
+          {
+            type: "hold",
+            detail: "",
+            color: colors.hold.default,
+            duration: 25,
+          },
+          {
+            type: "inhale",
+            detail: "",
+            color: colors.inhale.chest,
+            duration: 50,
+          },
+          {
+            type: "hold",
+            detail: "",
+            color: colors.hold.default,
+            duration: 25,
+          },
+          {
+            type: "exhale",
+            detail: "",
+            color: colors.exhale.default,
+            duration: 300,
+          },
+        ],
+      },
+      {
         code: "relax",
         durationInMinutes: 5,
         advanced: false,

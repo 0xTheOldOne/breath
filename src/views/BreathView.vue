@@ -62,6 +62,8 @@
   @import url("@/assets/style/variables.less");
 
   #breathCarousel {
+    width: 100%;
+
     button[class*="carousel-control-"] {
       width: 20%;
     }

@@ -10,9 +10,23 @@
       </div>
     </div>
     <div :class="menuContentClass">
-      <SoundSelector />
-      <div>2</div>
-      <div>3</div>
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-12">
+            <SoundSelector />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="separator"></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="disclaimer">I was greatly inspired by the famous relaxation application called <a href="https://www.calm.com/fr" target="_blank" rel="noopener noreferrer">Calm</a> when i wrote this app.</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -175,6 +189,24 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
+      }
+
+      .separator {
+        height: 1rem;
+      }
+
+      .disclaimer {
+        font-size: 1rem !important;
+        text-align: justify;
+        padding: 10px;
+        color: @text-color;
+        text-shadow: @shadow;
+
+        a {
+          color: inherit;
+          text-decoration: none;
+          font-size: inherit !important;
+        }
       }
     }
   }

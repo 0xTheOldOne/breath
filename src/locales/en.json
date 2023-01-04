@@ -9,6 +9,10 @@
     "advanced": "Advanced"
   },
   "sequences": {
+    "emergency": {
+      "title": "Calm down quickly",
+      "description": "Switch to your parasympathetic nervous system"
+    },
     "relax": {
       "title": "Relaxation",
       "description": "Calm your mind and ease your stress"

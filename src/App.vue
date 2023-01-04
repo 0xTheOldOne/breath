@@ -6,7 +6,6 @@
   <div class="router-view">
     <router-view />
   </div>
-  <div class="disclaimer">I was greatly inspired by the famous relaxation application called <a href="https://www.calm.com/fr" target="_blank" rel="noopener noreferrer">Calm</a> when i wrote this app.</div>
 </template>
 
 <script>
@@ -87,29 +86,19 @@
       #app {
         width: 100vw;
         height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-direction: column;
 
         .router-view {
-          width: 100%;
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100vw;
+          height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
           color: @text-color;
           text-shadow: @shadow;
-        }
-
-        .disclaimer {
-          font-size: 1rem;
-          text-align: center;
-          padding: 10px;
-          color: @text-color-light;
-          text-shadow: @shadow-light;
-
-          a {
-            color: inherit;
-            text-decoration: none;
-            font-size: inherit;
-          }
         }
       }
     }
@@ -118,12 +107,8 @@
   @media (max-width: @screen-xs-max) {
     html {
       body {
-        #app {
+        .router-view {
           padding: 10px;
-
-          .disclaimer {
-            font-size: 0.7rem !important;
-          }
         }
       }
     }

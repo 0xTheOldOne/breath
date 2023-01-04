@@ -9,6 +9,10 @@
     "advanced": "Avancé"
   },
   "sequences": {
+    "emergency": {
+      "title": "Se calmer rapidement",
+      "description": "Activez votre système nerveux parasympathique"
+    },
     "relax": {
       "title": "Relaxation",
       "description": "Calmez votre esprit et atténuez votre stress"

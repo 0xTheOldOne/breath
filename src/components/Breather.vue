@@ -19,16 +19,20 @@
     </div>
     <div class="technique-infos" v-if="!timeoutInProgress">
       <div class="title">
-        {{ $t("sequences." + technique.code + ".title") }} (<span v-for="(step, index) in technique.sequence">
-          <span>{{ step.duration / 100 }}</span>
-          <span v-if="index < technique.sequence.length - 1">&nbsp;-&nbsp;</span> </span
-        >)
+        {{ $t("sequences." + technique.code + ".title") }}
       </div>
       <div class="description">
         {{ $t("sequences." + technique.code + ".description") }}
       </div>
-      <div v-if="technique.advanced">
-        <span class="badge rounded-pill bg-light text-dark">{{ $t("messages.advanced") }}</span>
+      <div>
+        <span class="badge rounded-pill bg-light text-dark">
+          <span v-for="(step, index) in technique.sequence">
+            {{ step.duration / 100 }}
+            <span v-if="index < technique.sequence.length - 1">&nbsp;-&nbsp;</span>
+          </span>
+        </span>
+        <span v-if="technique.advanced">&nbsp;</span>
+        <span class="badge rounded-pill bg-light text-dark" v-if="technique.advanced">{{ $t("messages.advanced") }}</span>
       </div>
     </div>
     <div class="technique-infos" v-if="timeoutInProgress">
@@ -276,7 +280,7 @@
       margin: 0 auto;
       position: relative;
 
-      @size: 40vh;
+      @size: 35vh;
       width: @size !important;
       height: @size !important;
 
@@ -356,7 +360,7 @@
       width: 100%;
       margin: 0 auto;
       text-align: center;
-      padding: 1rem 0px;
+      padding: 1rem;
 
       .title {
         font-size: 3rem;
@@ -373,10 +377,12 @@
     }
 
     &.idle {
-      padding-top: 9rem;
+      padding-top: 12rem;
     }
 
     &.running {
+      padding-top: 16rem;
+
       .breath-controller {
         &.bottom {
           margin-top: 3rem;
@@ -393,6 +399,8 @@
 
   @media (max-width: @screen-xs-max) {
     .breath-container {
+      padding-top: 10rem !important;
+
       .ticker {
         position: absolute;
 
@@ -438,9 +446,9 @@
         }
       }
 
-      &.idle {
-        padding-top: 6rem !important;
-      }
+      // &.idle {
+      //   padding-top: 6rem !important;
+      // }
     }
   }
 </style>
