@@ -11,7 +11,7 @@
     </div>
     <div :class="menuContentClass">
       <div class="container">
-        <div class="row">
+        <!-- <div class="row">
           <div class="col-xs-12">
             <SoundSelector />
           </div>
@@ -20,10 +20,13 @@
           <div class="col-xs-12">
             <div class="separator"></div>
           </div>
-        </div>
+        </div> -->
         <div class="row">
           <div class="col-xs-12">
-            <div class="disclaimer">I was greatly inspired by the famous relaxation application called <a href="https://www.calm.com/fr" target="_blank" rel="noopener noreferrer">Calm</a> when i wrote this app.</div>
+            <div class="disclaimer">
+              <h3>Disclaimer</h3>
+              I was greatly inspired by the famous relaxation application called <a href="https://www.calm.com/fr" target="_blank" rel="noopener noreferrer">Calm</a> when i wrote this app.
+            </div>
           </div>
         </div>
       </div>
