@@ -1,36 +1,34 @@
 <template>
-  <div id="breathCarousel" class="carousel carousel-dark" data-bs-ride="false" data-bs-interval="false" data-bs-keyboard="false">
+  <div id="breathCarousel" class="carousel">
     <div class="carousel-inner">
-      <div v-for="(technique, index) in breathTechniques">
-        <div :class="index == breathTechniqueIndex ? 'carousel-item active' : 'carousel-item'">
-          <Breather :technique="technique" />
-        </div>
+      <div v-for="(technique, index) in breathTechniques" :key="technique.code" :class="index == breathTechniqueIndex ? 'carousel-item active' : 'carousel-item'">
+        <Breather :technique="technique" :active="index == breathTechniqueIndex" />
       </div>
     </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#breathCarousel" data-bs-slide="prev" v-on:click="setPrevTechniqueIndex">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
+    <button class="carousel-control-prev" type="button" :aria-label="$t('actions.previous')" v-on:click="setPrevTechniqueIndex">
+      <PhCaretLeft class="carousel-icon" weight="light" />
     </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#breathCarousel" data-bs-slide="next" v-on:click="setNextTechniqueIndex">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
+    <button class="carousel-control-next" type="button" :aria-label="$t('actions.next')" v-on:click="setNextTechniqueIndex">
+      <PhCaretRight class="carousel-icon" weight="light" />
     </button>
   </div>
 </template>
 
 <script>
-  import { mapState, mapGetters } from "vuex";
+  import { mapState } from "vuex";
+  import { PhCaretLeft, PhCaretRight } from "@phosphor-icons/vue";
   import Breather from "@/components/Breather.vue";
 
   export default {
     name: "BreathView",
     components: {
       Breather,
+      PhCaretLeft,
+      PhCaretRight,
     },
     computed: {
       ...mapState({
         userLocale: (state) => state.userLocale,
-        breathTechnique: (state) => state.breathTechnique,
         breathTechniques: (state) => state.breathTechniques,
         breathTechniqueIndex: (state) => state.breathTechniqueIndex,
       }),
@@ -66,6 +64,11 @@
 
     button[class*="carousel-control-"] {
       width: 20%;
+      color: @text-color;
+    }
+
+    .carousel-icon {
+      font-size: 2rem;
     }
   }
 

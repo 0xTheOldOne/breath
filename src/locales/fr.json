@@ -1,12 +1,22 @@
 {
   "title": "Breath",
+  "actions": {
+    "start": "Démarrer",
+    "stop": "Arrêter",
+    "reset": "Recommencer le cycle",
+    "previous": "Technique précédente",
+    "next": "Technique suivante",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu"
+  },
   "messages": {
     "inhale": "Inspirez",
     "exhale": "Expirez",
     "hold": "Retenez",
     "stomach": "(ventre)",
     "chest": "(poitrine)",
-    "advanced": "Avancé"
+    "advanced": "Avancé",
+    "duration": "{minutes} min"
   },
   "sequences": {
     "emergency": {
@@ -37,5 +47,14 @@
       "title": "Détente",
       "description": "Relâchez la pression et apaisez votre esprit"
     }
+  },
+  "disclaimer": {
+    "title": "Avertissement",
+    "text": "Cette application s’inspire grandement de la célèbre application de relaxation {calm}."
+  },
+  "sound": {
+    "music": "Musique",
+    "sounds": "Sons",
+    "content": "Contenu"
   }
 }

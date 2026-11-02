@@ -1,12 +1,22 @@
 {
   "title": "Breath",
+  "actions": {
+    "start": "Start",
+    "stop": "Stop",
+    "reset": "Restart the cycle",
+    "previous": "Previous technique",
+    "next": "Next technique",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
   "messages": {
     "inhale": "Inhale",
     "exhale": "Exhale",
     "hold": "Hold",
     "stomach": "(stomach)",
     "chest": "(chest)",
-    "advanced": "Advanced"
+    "advanced": "Advanced",
+    "duration": "{minutes} min"
   },
   "sequences": {
     "emergency": {
@@ -37,5 +47,14 @@
       "title": "Relaxation",
       "description": "Release the pressure and ease your mind"
     }
+  },
+  "disclaimer": {
+    "title": "Disclaimer",
+    "text": "I was greatly inspired by the famous relaxation application called {calm} when I wrote this app."
+  },
+  "sound": {
+    "music": "Music",
+    "sounds": "Sounds",
+    "content": "Content"
   }
 }

@@ -1,8 +1,8 @@
 <template>
-  <div class="breath-container" :class="timeoutInProgress ? 'running' : 'idle'">
-    <div class="breath" v-if="timeoutInProgress">
+  <div class="breath-container" :class="running ? 'running' : 'idle'">
+    <div class="breath" v-if="running">
       <div class="doughnut-container">
-        <div class="ticker" :style="'transform: rotate(' + degrees + 'deg);'" ticker-color="red"></div>
+        <div class="ticker" :style="'transform: rotate(' + degrees + 'deg);'"></div>
         <Doughnut class="doughnut" ref="chart" :chart-data="chartData" :chart-options="chartOptions" />
       </div>
       <div class="action" :style="'transform: scale(' + scale + ');'">
@@ -14,10 +14,12 @@
         </span>
       </div>
     </div>
-    <div class="breath-controller" v-if="!timeoutInProgress">
-      <span class="material-symbols-outlined" v-on:click="startTimer"> play_circle </span>
+    <div class="breath-controller" v-if="!running">
+      <button type="button" class="icon-button" :aria-label="$t('actions.start')" v-on:click="startTimer">
+        <PhPlayCircle weight="light" />
+      </button>
     </div>
-    <div class="technique-infos" v-if="!timeoutInProgress">
+    <div class="technique-infos" v-if="!running">
       <div class="title">
         {{ $t("sequences." + technique.code + ".title") }}
       </div>
@@ -25,8 +27,10 @@
         {{ $t("sequences." + technique.code + ".description") }}
       </div>
       <div>
+        <span class="badge rounded-pill bg-light text-dark">{{ $t("messages.duration", { minutes: technique.durationInMinutes }) }}</span>
+        <span>&nbsp;</span>
         <span class="badge rounded-pill bg-light text-dark">
-          <span v-for="(step, index) in technique.sequence">
+          <span v-for="(step, index) in technique.sequence" :key="index">
             {{ step.duration / 100 }}
             <span v-if="index < technique.sequence.length - 1">&nbsp;-&nbsp;</span>
           </span>
@@ -35,47 +39,57 @@
         <span class="badge rounded-pill bg-light text-dark" v-if="technique.advanced">{{ $t("messages.advanced") }}</span>
       </div>
     </div>
-    <div class="technique-infos" v-if="timeoutInProgress">
+    <div class="technique-infos" v-if="running">
       <div class="description">
         <code>{{ elapsed }}</code>
       </div>
     </div>
-    <div class="breath-controller bottom" v-if="timeoutInProgress">
-      <span class="material-symbols-outlined" v-on:click="stopTimer"> stop_circle </span>
-      <span class="material-symbols-outlined" v-on:click="resetValues"> device_reset </span>
+    <div class="breath-controller bottom" v-if="running">
+      <button type="button" class="icon-button" :aria-label="$t('actions.stop')" v-on:click="stopTimer">
+        <PhStopCircle weight="light" />
+      </button>
+      <button type="button" class="icon-button" :aria-label="$t('actions.reset')" v-on:click="resetValues">
+        <PhArrowCounterClockwise weight="light" />
+      </button>
     </div>
   </div>
 </template>
 
 <script>
-  import { mapState, mapGetters } from "vuex";
-
   import { Doughnut } from "vue-chartjs";
-  import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale, Plugin, DoughnutController } from "chart.js";
+  import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale } from "chart.js";
+  import { PhPlayCircle, PhStopCircle, PhArrowCounterClockwise } from "@phosphor-icons/vue";
 
   ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale);
+
+  // Step durations are stored in hundredths of a second.
+  const MS_PER_UNIT = 10;
 
   export default {
     name: "Breather",
     components: {
       Doughnut,
+      PhPlayCircle,
+      PhStopCircle,
+      PhArrowCounterClockwise,
     },
     props: {
       technique: {
         type: Object,
-        default: {},
         required: true,
+      },
+      active: {
+        type: Boolean,
+        default: false,
       },
     },
     data() {
       return {
-        timeout: null,
-        timeoutInMs: 10,
-        timeoutInProgress: false,
-        timeoutTotalTimeElapsed: 0,
-        currentAction: "",
-        currentActionDetail: "",
-        currentStepIndex: 0,
+        frameId: null,
+        running: false,
+        lastTimestamp: 0,
+        elapsedMs: 0,
+        cycleStartMs: 0,
         chartOptions: {
           borderWidth: 0,
           circumference: 360,
@@ -100,9 +114,34 @@
       };
     },
     computed: {
-      ...mapState({
-        breathTechniqueIndex: (state) => state.breathTechniqueIndex,
-      }),
+      sessionDurationMs() {
+        return this.technique.durationInMinutes * 60 * 1000;
+      },
+      // First cycle end at or after the session duration, so no breath is cut short; at least one cycle after a reset.
+      sessionEndMs() {
+        var cycleMs = this.cycleDuration * MS_PER_UNIT;
+        var cycles = Math.max(1, Math.ceil((this.sessionDurationMs - this.cycleStartMs) / cycleMs));
+        return this.cycleStartMs + cycles * cycleMs;
+      },
+      cycleDuration() {
+        return this.arraySum(this.technique.sequence.map((step) => step.duration));
+      },
+      // Position in the current cycle, in step duration units.
+      cyclePosition() {
+        return ((this.elapsedMs - this.cycleStartMs) / MS_PER_UNIT) % this.cycleDuration;
+      },
+      stepProgress() {
+        var start = 0;
+        return this.technique.sequence.map((step) => {
+          var current = Math.min(Math.max(this.cyclePosition - start, 0), step.duration);
+          start += step.duration;
+          return current;
+        });
+      },
+      currentStepIndex() {
+        var index = this.stepProgress.findIndex((current, i) => current < this.technique.sequence[i].duration);
+        return index >= 0 ? index : this.technique.sequence.length - 1;
+      },
       previousStep() {
         var previousIndex = this.currentStepIndex - 1;
         var index = previousIndex >= 0 ? previousIndex : this.technique.sequence.length - 1;
@@ -116,15 +155,18 @@
       step() {
         return this.technique.sequence[this.currentStepIndex];
       },
+      currentAction() {
+        return this.running ? this.step.type : "";
+      },
+      currentActionDetail() {
+        return this.running ? this.step.detail : "";
+      },
       remaining() {
-        var max = this.arraySum(this.technique.sequence.map((step) => step.duration));
-        var val = this.arraySum(this.technique.sequence.map((step) => step.current));
-        return max - val;
+        return this.cycleDuration - this.arraySum(this.stepProgress);
       },
       chartData() {
-        var max = this.arraySum(this.technique.sequence.map((step) => step.duration));
         var data = this.technique.sequence.map((step) => step.duration);
-        var done = this.technique.sequence.map((step) => step.current);
+        var done = [...this.stepProgress];
         var colors_data = this.technique.sequence.map((step) => step.color + "C0");
         var colors_done = this.technique.sequence.map((step) => step.color + "60");
 
@@ -151,8 +193,8 @@
         };
       },
       scale() {
-        var val = 1;
-        var current = this.step.current;
+        var val;
+        var current = this.stepProgress[this.currentStepIndex];
         var duration = this.step.duration;
 
         if (this.nextStep.type == this.step.type) {
@@ -185,78 +227,64 @@
         return val;
       },
       degrees() {
-        var total = this.arraySum(this.technique.sequence.map((step) => step.duration));
-        var current = this.arraySum(this.technique.sequence.map((step) => step.current));
-        return Math.floor((current * 360) / total);
+        return Math.floor((this.arraySum(this.stepProgress) * 360) / this.cycleDuration);
       },
       elapsed() {
-        return new Date(this.timeoutTotalTimeElapsed).toISOString().slice(11, -1).substring(8, -1);
+        var totalSeconds = Math.floor(this.elapsedMs / 1000);
+        var hours = Math.floor(totalSeconds / 3600);
+        var minutes = Math.floor(totalSeconds / 60) % 60;
+        var seconds = totalSeconds % 60;
+        return [hours, minutes, seconds].map((n) => String(n).padStart(2, "0")).join(":");
       },
     },
     methods: {
       arraySum(array) {
         return array.reduce((a, b) => a + b, 0);
       },
-      setTechnique(val) {
-        this.stopTimer();
-        val.sequence.forEach((step) => {
-          step.current = 0;
-        });
-        console.debug("🧘‍♂️ Breath sequence '" + this.technique.code + "' loaded...");
-      },
       startTimer() {
-        this.timeout = setTimeout(this.updateValues, this.timeoutInMs);
-
-        if (!this.timeoutInProgress) {
-          this.timeoutInProgress = true;
+        if (this.running) {
+          return;
         }
+        this.running = true;
+        this.lastTimestamp = performance.now();
+        this.frameId = requestAnimationFrame(this.tick);
       },
       stopTimer() {
-        clearTimeout(this.timeout);
-        this.timeoutInProgress = false;
-        this.timeoutTotalTimeElapsed = 0;
+        cancelAnimationFrame(this.frameId);
+        this.frameId = null;
+        this.running = false;
+        this.elapsedMs = 0;
 
         this.resetValues();
       },
+      // Restarts the cycle without resetting the elapsed time.
       resetValues() {
-        this.currentStepIndex = 0;
-        this.technique.sequence.forEach((step) => {
-          step.current = 0;
-        });
+        this.cycleStartMs = this.elapsedMs;
       },
-      updateValues() {
-        this.timeoutTotalTimeElapsed += this.timeoutInMs;
+      // Wall-clock delta: no drift, and time spent in a hidden tab is still counted.
+      tick() {
+        var now = performance.now();
+        this.elapsedMs += now - this.lastTimestamp;
+        this.lastTimestamp = now;
 
-        if (this.step.current >= this.step.duration) {
-          this.currentStepIndex += 1;
+        if (this.elapsedMs >= this.sessionEndMs) {
+          this.stopTimer();
+          return;
         }
 
-        if (this.currentStepIndex >= this.technique.sequence.length) {
-          this.resetValues();
-        }
-
-        if (this.step.current < this.step.duration) {
-          if (this.step.current == 0) {
-            this.currentAction = this.step.type;
-            this.currentActionDetail = this.step.detail;
-          }
-
-          this.step.current += 1;
-        }
-
-        this.startTimer();
+        this.frameId = requestAnimationFrame(this.tick);
       },
     },
     watch: {
-      technique(newVal, oldVal) {
-        this.setTechnique(newVal);
-      },
-      breathTechniqueIndex(newVal, oldVal) {
-        this.stopTimer();
+      // Leaving the slide ends the session.
+      active(isActive) {
+        if (!isActive) {
+          this.stopTimer();
+        }
       },
     },
-    created() {
-      this.setTechnique(this.technique);
+    beforeUnmount() {
+      cancelAnimationFrame(this.frameId);
     },
   };
 </script>
@@ -269,10 +297,15 @@
     text-shadow: @shadow;
   }
 
-  .material-symbols-outlined {
-    cursor: pointer;
+  .icon-button {
+    .reset-button();
     color: @text-color-light;
-    text-shadow: @shadow-light;
+    filter: drop-shadow(@shadow-light);
+
+    // The scoped `*` rule above would otherwise darken the icon.
+    svg {
+      color: inherit;
+    }
   }
 
   .breath-container {
@@ -343,13 +376,13 @@
     .breath-controller {
       text-align: center;
 
-      .material-symbols-outlined {
+      .icon-button {
         font-size: 10rem;
         margin: 0 2rem;
       }
 
       &.bottom {
-        .material-symbols-outlined {
+        .icon-button {
           font-size: 5rem !important;
           margin-top: 2rem !important;
         }
@@ -440,7 +473,7 @@
         .breath-controller {
           margin: 0px !important;
 
-          .material-symbols-outlined {
+          .icon-button {
             margin-top: 0px !important;
           }
         }

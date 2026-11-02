@@ -29,7 +29,6 @@ export default createStore({
   state: {
     userLocale: "",
     breathTechniqueIndex: 0,
-    breathTechnique: {},
     breathTechniques: [
       {
         code: "relax",
@@ -222,37 +221,10 @@ export default createStore({
   },
   getters: {},
   mutations: {
-    resetLocalStorage(state) {
-      console.debug("Reset localStorage...");
-
-      // Delete localStorage state
-      localStorage.removeItem(vuexPersistKey);
-
-      this.commit("initializeFromLocalStorage");
-
-      console.debug("Reset localStorage... DONE");
-    },
-    initializeFromLocalStorage(state) {
-      console.debug("Retrieving settings from localStorage...");
-
-      if (localStorage.getItem(vuexPersistKey) != null && localStorage.getItem(vuexPersistKey) != undefined) {
-        state = JSON.parse(localStorage.getItem(vuexPersistKey));
-      } else {
-        this.commit({
-          type: "setTechnique",
-          technique: state.breathTechniques[state.breathTechniqueIndex],
-        });
-        localStorage.setItem(vuexPersistKey, JSON.stringify(state));
-      }
-
-      console.debug("Retrieving settings from localStorage... DONE");
-    },
     setUserLocale(state, payload) {
-      console.debug(payload);
       state.userLocale = payload.locale;
     },
     setTechniqueIndex(state, payload) {
-      console.debug(payload);
       state.breathTechniqueIndex = payload.index;
     },
   },

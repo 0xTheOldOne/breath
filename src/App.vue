@@ -9,16 +9,12 @@
 </template>
 
 <script>
-  import { mapState, mapGetters } from "vuex";
-  import { getSupportedLocales } from "./locales/helper";
-  import { getBrowserLocale } from "./locales/helper";
+  import { mapState } from "vuex";
+  import { getSupportedLocales, getBrowserLocale, supportedLocalesInclude } from "./locales/helper";
   import Menu from "@/components/Menu.vue";
 
   export default {
     name: "App",
-    beforeCreate() {
-      this.$store.commit("initializeFromLocalStorage");
-    },
     components: {
       Menu,
     },
@@ -30,29 +26,24 @@
     },
     methods: {
       setLocale(locale) {
-        console.debug("🌐 Previous $i18n.locale : " + this.$i18n.locale);
         this.$store.commit({
           type: "setUserLocale",
           locale: locale,
         });
         this.$i18n.locale = locale;
+        document.documentElement.lang = locale;
       },
     },
     mounted() {
-      console.debug("🌐 userLocale = " + this.$store.state.userLocale + " / i18n.locale = " + this.$i18n.locale);
       if (this.userLocale !== "" && this.userLocale != undefined && this.userLocale != null) {
-        console.debug("🌐 using userLocale");
         this.setLocale(this.userLocale);
       } else {
-        console.debug("🌐 using browserLocale");
-        this.setLocale(this.browserLocale);
+        this.setLocale(supportedLocalesInclude(this.browserLocale) ? this.browserLocale : "en");
       }
     },
     computed: {
       ...mapState({
         userLocale: (state) => state.userLocale,
-        breathTechnique: (state) => state.breathTechnique,
-        breathTechniques: (state) => state.breathTechniques,
       }),
     },
   };
@@ -80,7 +71,6 @@
         font-family: @font-text;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-        overflow: hidden;
       }
 
       #app {
