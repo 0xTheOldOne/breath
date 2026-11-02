@@ -59,24 +59,19 @@ export default createStore({
         code: "balance",
         durationInMinutes: 2,
         advanced: false,
+        // Coherent breathing: ~5.5 breaths per minute, no hold.
         sequence: [
           {
             type: "inhale",
             detail: "",
             color: colors.inhale.default,
-            duration: 400,
-          },
-          {
-            type: "hold",
-            detail: "",
-            color: colors.hold.default,
-            duration: 200,
+            duration: 550,
           },
           {
             type: "exhale",
             detail: "",
             color: colors.exhale.default,
-            duration: 400,
+            duration: 550,
           },
         ],
       },
@@ -140,36 +135,25 @@ export default createStore({
         code: "emergency",
         durationInMinutes: 1,
         advanced: true,
+        // Physiological sigh: deep inhale, short top-up inhale, long slow exhale.
         sequence: [
           {
             type: "inhale",
-            detail: "",
-            color: colors.inhale.default,
-            duration: 150,
-          },
-          {
-            type: "hold",
-            detail: "",
-            color: colors.hold.default,
-            duration: 25,
+            detail: "stomach",
+            color: colors.inhale.stomach,
+            duration: 250,
           },
           {
             type: "inhale",
-            detail: "",
+            detail: "chest",
             color: colors.inhale.chest,
-            duration: 50,
-          },
-          {
-            type: "hold",
-            detail: "",
-            color: colors.hold.default,
-            duration: 25,
+            duration: 100,
           },
           {
             type: "exhale",
             detail: "",
             color: colors.exhale.default,
-            duration: 300,
+            duration: 600,
           },
         ],
       },
